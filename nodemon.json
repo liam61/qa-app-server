@@ -1,0 +1,15 @@
+{
+  "env": {
+    "MONGO_ATLAS_PW": "qa-app-server",
+    "JWT_KEY": "secret"
+  },
+  "watch": [
+    "server"
+  ],
+  "ext": "ts",
+  "ignore": [
+    "src/**/*.spec.ts"
+  ],
+  "exec": "ts-node server/bootstrap",
+  "delay": "2500"
+}
