@@ -18,13 +18,13 @@ server
       res.header('Access-Control-Allow-Origin', '*');
       res.header(
         'Access-Control-Allow-Headers',
-        'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+        'Origin, X-Requested-With, Content-Type, Accept, Authorization',
       );
 
       if (req.method === 'OPTIONS') {
         res.header(
           'Access-Control-Allow-Methods',
-          'PUT, POST, PATCH, DELETE, GET'
+          'PUT, POST, PATCH, DELETE, GET',
         );
 
         return res.status(204).json({});
@@ -49,5 +49,5 @@ server
 server
   .build()
   .listen(4000, () =>
-    console.log('your server is running at http://localhost:4000 :)')
+    console.log('your server is running at http://localhost:4000 :)'),
   );

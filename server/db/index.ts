@@ -28,11 +28,11 @@ class MongoDBClient {
     connection.on('connected', () => console.log('mongodb connection succeed'));
 
     connection.on('error', error =>
-      console.log('mongodb connection failed', error)
+      console.log('mongodb connection failed', error),
     );
 
     connection.on('disconnected', error =>
-      console.log('mongodb is disconnected', error)
+      console.log('mongodb is disconnected', error),
     );
   }
 }

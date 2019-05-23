@@ -145,13 +145,6 @@
       }
     ],
     "use-isnan": true,
-    "jsx-no-lambda": false,
-    "jsx-no-string-ref": false,
-    "jsx-boolean-value": [
-      true,
-      "never"
-    ],
-    "jsx-no-multiline-js": false,
     "whitespace": [
       true,
       "check-branch",

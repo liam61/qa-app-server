@@ -1,5 +1,3 @@
-import { provide } from '../ioc/ioc';
-import TYPES from '../constant/types';
 import { IFile } from './qstDetail';
 
 export interface IQuestion {
@@ -19,9 +17,8 @@ export interface IQuestion {
   unread: number;
 }
 
-type receiverType = { [key in 'department' | 'account']?: string[] };
+// type receiverType = { [key in 'department' | 'account']?: string[] };
 
-@provide(TYPES.Question)
 export class Question implements IQuestion {
   constructor(
     public readonly id: string,
@@ -37,6 +34,6 @@ export class Question implements IQuestion {
     public author: string,
     public avatar: string,
     public read: number,
-    public unread: number
+    public unread: number,
   ) {}
 }

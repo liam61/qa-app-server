@@ -32,7 +32,7 @@ export class UserController {
   @httpGet('/:id')
   public async getUserById(
     @reqParam('id') id: string,
-    @response() res: Response
+    @response() res: Response,
   ) {
     const data = await this.userService.getUserById(id);
 
@@ -55,7 +55,7 @@ export class UserController {
   public async updateUser(
     @reqParam('id') id: string,
     @reqBody() body: IUser,
-    @response() res: Response
+    @response() res: Response,
   ) {
     await this.userService.updateUser(id, body);
 
@@ -65,7 +65,7 @@ export class UserController {
   @httpDelete('/:id')
   public async deleteUser(
     @reqParam('id') id: string,
-    @response() res: Response
+    @response() res: Response,
   ) {
     await this.userService.deleteUser(id);
 

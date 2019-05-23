@@ -40,7 +40,7 @@ const userSchema = new Schema(
     ask: Number,
     score: Number,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default model('User', userSchema);
