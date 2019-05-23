@@ -1,38 +1,53 @@
 import 'reflect-metadata';
 import { InversifyExpressServer } from 'inversify-express-utils';
-import { Container } from 'inversify';
-import { makeLoggerMiddleware } from 'inversify-logger-middleware';
-import * as bodyParser from 'body-parser';
-import * as helmet from 'helmet';
-import TYPES from './constant/types';
-import { UserService } from './service/user';
-import { MongoDBClient } from './utils/mongodb/client';
-import './controller/home';
-import './controller/user';
+import { Request, Response, NextFunction } from 'express';
+import bodyParser from 'body-parser';
+import { container } from './ioc/ioc';
+import helmet from 'helmet';
+import { IErrRes } from './typings';
 
-// load everything needed to the Container
-let container = new Container();
+import './db';
 
-if (process.env.NODE_ENV === 'development') {
-    let logger = makeLoggerMiddleware();
-    container.applyMiddleware(logger);
-}
+const server = new InversifyExpressServer(container);
 
-container.bind<MongoDBClient>(TYPES.MongoDBClient).to(MongoDBClient);
-container.bind<UserService>(TYPES.UserService).to(UserService);
+server
+  .setConfig(app => {
+    app.use(bodyParser.urlencoded({ extended: false })); // allow querystring
+    app.use(bodyParser.json());
+    app.use((req, res, next) => {
+      res.header('Access-Control-Allow-Origin', '*');
+      res.header(
+        'Access-Control-Allow-Headers',
+        'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+      );
 
-// start the server
-let server = new InversifyExpressServer(container);
-server.setConfig((app) => {
-  app.use(bodyParser.urlencoded({
-    extended: true
-  }));
-  app.use(bodyParser.json());
-  app.use(helmet());
-});
+      if (req.method === 'OPTIONS') {
+        res.header(
+          'Access-Control-Allow-Methods',
+          'PUT, POST, PATCH, DELETE, GET'
+        );
 
-let app = server.build();
-app.listen(3000);
-console.log('Server started on port 3000 :)');
+        return res.status(204).json({});
+      }
 
-exports = module.exports = app;
+      return void next();
+    });
+    app.use(helmet());
+  })
+  .setErrorConfig(app => {
+    app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+      // { name: 'UnknownError', message: 'oops, something bad. :(' }
+      console.log(err.stack);
+
+      res.status(500).json({
+        errcode: 500,
+        errmsg: `${err.name}: ${err.message}`,
+      } as IErrRes);
+    });
+  });
+
+server
+  .build()
+  .listen(4000, () =>
+    console.log('your server is running at http://localhost:4000 :)')
+  );

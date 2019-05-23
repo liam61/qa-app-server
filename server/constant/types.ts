@@ -1,6 +1,8 @@
+// for models and services
 const TYPES = {
-    MongoDBClient: Symbol.for('MongoDBClient'),
-    UserService: Symbol.for('UserService')
+  // User: Symbol.for('User'),
+  UserService: Symbol.for('UserService'),
+  HomeService: Symbol.for('HomeService'),
 };
 
 export default TYPES;

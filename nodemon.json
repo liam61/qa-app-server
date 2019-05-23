@@ -11,5 +11,5 @@
     "src/**/*.spec.ts"
   ],
   "exec": "ts-node server/bootstrap",
-  "delay": "2500"
+  "delay": "500"
 }

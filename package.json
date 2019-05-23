@@ -2,14 +2,20 @@
   "name": "inversify-express-example",
   "version": "1.0.0",
   "description": "question-answer server",
+  "main": "server/bootstrap.ts",
   "scripts": {
     "start": "nodemon",
     "build": "rimraf dist && tsc",
-    "server": "node dist/bootstrap"
+    "server": "node dist/bootstrap",
+    "lint": "tslint --fix --project ."
   },
   "author": "lawler61",
+  "license": "ISC",
+  "pre-commit": [
+    "lint"
+  ],
   "keywords": [
-    "react",
+    "express",
     "inversify",
     "typescript",
     "question-answer"
@@ -20,12 +26,13 @@
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "helmet": "^3.18.0",
+    "http-status-code": "^2.1.0",
     "inversify": "^5.0.1",
     "inversify-binding-decorators": "^4.0.0",
     "inversify-express-utils": "^6.3.2",
     "inversify-logger-middleware": "^3.1.0",
     "jsonwebtoken": "^8.5.1",
-    "mongodb": "^3.2.4",
+    "mongoose": "^5.5.10",
     "morgan": "^1.9.1",
     "multer": "^1.4.1",
     "qs": "^6.7.0",
@@ -33,14 +40,16 @@
     "uid": "^0.0.2"
   },
   "devDependencies": {
+    "@types/bcrypt": "^3.0.0",
     "@types/body-parser": "^1.17.0",
     "@types/express": "^4.16.1",
     "@types/helmet": "^0.0.43",
-    "@types/mongodb": "^3.1.26",
+    "@types/mongoose": "^5.5.1",
     "@types/morgan": "^1.7.35",
     "@types/node": "^12.0.2",
     "@types/qs": "^6.5.3",
     "nodemon": "^1.19.0",
+    "pre-commit": "^1.2.2",
     "rimraf": "^2.6.3",
     "ts-node": "^8.1.0",
     "tslint": "^5.16.0",

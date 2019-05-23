@@ -1,5 +1,11 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "http-status-code": [
+        "server/typings/http-status-code.d.ts"
+      ]
+    },
     "module": "commonjs",
     "target": "es5",
     "lib": [
@@ -37,7 +43,7 @@
     "pretty": true,
     "allowSyntheticDefaultImports": true,
     "allowUnusedLabels": false,
-    // "esModuleInterop": true,
+    "esModuleInterop": true,
     "moduleResolution": "node",
     /* Experimental Options */
     "emitDecoratorMetadata": true,
@@ -49,6 +55,6 @@
   ],
   "exclude": [
     "node_modules",
-    "server/test"
+    "types"
   ]
 }
