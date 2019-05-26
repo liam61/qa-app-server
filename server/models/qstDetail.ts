@@ -42,7 +42,7 @@ const QstDetailSchema = new Schema(
       account: [String],
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default model('QstDetail', QstDetailSchema);

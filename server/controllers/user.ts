@@ -90,7 +90,7 @@ export default class UserController {
   @httpGet('/validate/:account')
   async validateAccount(
     @reqParam('account') account: string,
-    @response() res: Response
+    @response() res: Response,
   ) {
     const exist = await this.userService.validateAccount(account);
 
@@ -101,7 +101,7 @@ export default class UserController {
       200,
       'success',
       exist ? 'account is available' : 'account already exists',
-      { exist, validate: validateStr }
+      { exist, validate: validateStr },
     );
   }
 
@@ -109,7 +109,7 @@ export default class UserController {
   async updateUser(
     @reqParam('id') id: string,
     @reqBody() body: IUser,
-    @response() res: Response
+    @response() res: Response,
   ) {
     await this.userService.update(id, body);
 

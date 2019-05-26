@@ -32,5 +32,5 @@ server
 server
   .build()
   .listen(4000, () =>
-    console.log('your server is running at http://localhost:4000 :)')
+    console.log('your server is running at http://localhost:4000 :)'),
   );

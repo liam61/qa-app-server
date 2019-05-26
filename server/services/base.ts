@@ -19,7 +19,7 @@ export default abstract class BaseService<M extends Model<Document>, I>
   async findAll(
     conditions?: any,
     projection?: any,
-    sort?: any
+    sort?: any,
   ): Promise<Document[]> {
     return await this._Model
       .find(conditions, projection)
@@ -30,7 +30,7 @@ export default abstract class BaseService<M extends Model<Document>, I>
   async findById(
     id: idType,
     projection?: any,
-    sort?: any
+    sort?: any,
   ): Promise<Document | null> {
     return await this._Model
       .findById(id, projection)
@@ -41,7 +41,7 @@ export default abstract class BaseService<M extends Model<Document>, I>
   async findOne(
     conditions: any,
     projection?: any,
-    sort?: any
+    sort?: any,
   ): Promise<Document | null> {
     return await this._Model
       .findOne(conditions, projection)

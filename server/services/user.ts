@@ -46,7 +46,7 @@ export default class UserService extends BaseService<typeof User, IUser> {
 
     const user: any = await User.findOne(
       { [type]: account },
-      'name password'
+      'name password',
     ).exec();
 
     return {
@@ -89,5 +89,5 @@ export default class UserService extends BaseService<typeof User, IUser> {
     }
 
     return type;
-  };
+  }
 }

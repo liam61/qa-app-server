@@ -21,7 +21,7 @@ import { VERSION } from '../common/global';
 export default class QuestionController {
   constructor(
     @inject(TYPES.QuestionService) private qstService: QuestionService,
-    @inject(TYPES.QstDetailService) private qDetailService: QstDetailService
+    @inject(TYPES.QstDetailService) private qDetailService: QstDetailService,
   ) {}
 
   // TODO: authMiddleware
@@ -50,7 +50,7 @@ export default class QuestionController {
   @httpGet('/:id/details')
   async getQstDetailById(
     @reqParam('id') id: string,
-    @response() res: Response
+    @response() res: Response,
   ) {
     const data = await this.qDetailService.findOne({ questionId: id });
 
@@ -60,7 +60,7 @@ export default class QuestionController {
           200,
           'success',
           'get a question detail successfully',
-          data.toObject()
+          data.toObject(),
         )
       : sendRes(res, 400, 'fail', 'question do not exist');
   }
@@ -78,7 +78,7 @@ export default class QuestionController {
   async updateQuestion(
     @reqParam('id') id: string,
     @reqBody() body: IQuestion,
-    @response() res: Response
+    @response() res: Response,
   ) {
     await this.qstService.update(id, body);
 
@@ -89,7 +89,7 @@ export default class QuestionController {
   async submitQstDetail(
     @reqParam('id') id: string, // detailId
     @reqBody() body: any[],
-    @response() res: Response
+    @response() res: Response,
   ) {
     const userId = '5ce8053471841b824c75d09c'; // authMiddleware
 
