@@ -1,8 +1,4 @@
 {
-  "env": {
-    "MONGO_ATLAS_PW": "qa-app-server",
-    "JWT_KEY": "secret"
-  },
   "watch": [
     "server"
   ],

@@ -1,8 +1,18 @@
+import { sendRes, sendErr } from './response';
+import uid from 'uid';
+import { PREFIX } from '../common/global';
 import { Types } from 'mongoose';
-import sendRes from './response';
 
-function getUid() {
-  return new Types.ObjectId();
+function getUid(len = 10) {
+  return `${PREFIX}-${uid(len)}`;
 }
 
-export { getUid, sendRes };
+function getObjectId() {
+  return Types.ObjectId();
+}
+
+function getLocalDate(date: Date) {
+  return date.toLocaleString('zh', { hour12: false }).replace(/\//g, '-');
+}
+
+export { getUid, getObjectId, getLocalDate, sendRes, sendErr };

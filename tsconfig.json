@@ -3,7 +3,10 @@
     "baseUrl": ".",
     "paths": {
       "http-status-code": [
-        "server/typings/http-status-code.d.ts"
+        "server/typings/http-status-code.d.ts",
+      ],
+      "uid": [
+        "server/typings/uid.d.ts"
       ]
     },
     "module": "commonjs",

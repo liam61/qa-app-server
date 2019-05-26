@@ -1,7 +1,7 @@
 import {
   controller,
-  // request,
   response,
+  // request,
   requestParam as reqParam,
   requestBody as reqBody,
   httpGet,
@@ -10,64 +10,115 @@ import {
   httpDelete,
   // httpPatch,
 } from 'inversify-express-utils';
+import jwt from 'jsonwebtoken';
 import { inject, TYPES, Response } from '../ioc/ioc';
-import { UserService } from '../services/user';
+import { UserService } from '../services';
 import { IUser } from '../models/user';
-import { sendRes } from '../utils';
-import { VERSION } from '../common/global';
+import { sendRes, getUid } from '../utils';
+import { VERSION, JWT_KEY } from '../common/global';
+import { authMiddleware } from '../middleware';
+
+let validateStr = '';
 
 @controller(`/${VERSION}/users`)
-export class UserController {
+export default class UserController {
   constructor(@inject(TYPES.UserService) private userService: UserService) {}
 
   @httpGet('/')
-  public async getUsers(@response() res: Response) {
-    const data = await this.userService.getUsers();
+  async getUsers(@response() res: Response) {
+    const data = await this.userService.findAll();
 
     data.length
-      ? sendRes(res, 200, 'success', 'find users successfully', data)
+      ? sendRes(res, 200, 'success', 'get users successfully', data)
       : sendRes(res, 404, 'fail', 'no user exists');
   }
 
   @httpGet('/:id')
-  public async getUserById(
-    @reqParam('id') id: string,
-    @response() res: Response,
-  ) {
-    const data = await this.userService.getUserById(id);
+  async getUserById(@reqParam('id') id: string, @response() res: Response) {
+    const data = await this.userService.findById(id);
 
     data
-      ? sendRes(res, 200, 'success', 'find a user successfully', data)
+      ? sendRes(res, 200, 'success', 'get a user successfully', data)
       : sendRes(res, 400, 'fail', 'user do not exist');
   }
 
-  // public async createUser(req: Request, @response() res: Response) {
+  //  async createUser(req: Request, @response() res: Response) {
   @httpPost('/signup')
-  public async createUser(@reqBody() body: IUser, @response() res: Response) {
-    const { name, password } = body as IUser;
+  async createUser(@reqBody() body: any, @response() res: Response) {
+    const { name, password, validate } = body;
 
-    await this.userService.createUser(name, password);
+    if (validate !== validateStr) {
+      const validateError = new Error('illegal signup without validate');
+      validateError.name = 'ValidateError';
+      throw validateError;
+    }
+
+    // await this.userService.createUser(name, password);
+    await this.userService.save({ name, password });
 
     sendRes(res, 201, 'success', 'create a user successfully');
   }
 
-  @httpPut('/:id')
-  public async updateUser(
+  @httpPost('/login')
+  async login(@reqBody() body: any, @response() res: Response) {
+    const { account, password, validate } = body;
+    // console.log(validateStr);
+
+    if (validate !== validateStr) {
+      const validateError = new Error('illegal login without validate');
+      validateError.name = 'ValidateError';
+      throw validateError;
+    }
+
+    const {
+      match,
+      user: { _id, name },
+    } = await this.userService.login(account, password);
+
+    if (match) {
+      const token = jwt.sign({ id: _id, name }, JWT_KEY, { expiresIn: '1h' });
+
+      sendRes(res, 200, 'success', 'login successfully', { token });
+
+      return;
+    }
+
+    sendRes(res, 401, 'fail', 'login failed');
+  }
+
+  // for login and signup
+  @httpGet('/validate/:account')
+  async validateAccount(
+    @reqParam('account') account: string,
+    @response() res: Response
+  ) {
+    const exist = await this.userService.validateAccount(account);
+
+    validateStr = getUid();
+
+    sendRes(
+      res,
+      200,
+      'success',
+      exist ? 'account is available' : 'account already exists',
+      { exist, validate: validateStr }
+    );
+  }
+
+  @httpPut('/:id', authMiddleware)
+  async updateUser(
     @reqParam('id') id: string,
     @reqBody() body: IUser,
-    @response() res: Response,
+    @response() res: Response
   ) {
-    await this.userService.updateUser(id, body);
+    await this.userService.update(id, body);
 
     sendRes(res, 200, 'success', 'update user successfully');
   }
 
-  @httpDelete('/:id')
-  public async deleteUser(
-    @reqParam('id') id: string,
-    @response() res: Response,
-  ) {
-    await this.userService.deleteUser(id);
+  @httpDelete('/:id', authMiddleware)
+  async deleteUser(@reqParam('id') id: string, @response() res: Response) {
+    await this.userService.deleteById(id);
 
     sendRes(res, 200, 'success', 'delete a user successfully');
   }

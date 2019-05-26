@@ -1,4 +1,4 @@
-type resType = 'success' | 'fail';
+type resType = 'success' | 'fail' | 'info';
 
 interface IResponse {
   status: number;
@@ -7,8 +7,9 @@ interface IResponse {
 }
 
 interface IErrRes {
-  errcode: number;
-  errmsg: string;
+  status: number;
+  statusText: string;
+  data: { errcode: number; errmsg: string };
 }
 
 export { IResponse, IErrRes, resType };

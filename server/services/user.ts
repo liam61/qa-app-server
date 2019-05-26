@@ -1,20 +1,27 @@
 import { provide } from '../ioc/ioc';
-// import { IIndex } from '../interface/IIndex';
+import BaseService from './base';
 import User, { IUser } from '../models/user';
 import bcrypt from 'bcrypt';
 import TYPES from '../constant/types';
+import { EMAIL_REG, PHONE_REG } from '../common/global';
 
 @provide(TYPES.UserService)
-export class UserService {
-  public async getUsers() {
-    return await User.find({}, '-password').exec();
+export default class UserService extends BaseService<typeof User, IUser> {
+  constructor() {
+    super(User);
   }
 
-  public async getUserById(id: string) {
-    return await User.findById(id, '-_id -password').exec();
+  async save(params: IUser) {
+    const { password } = params;
+
+    if (password) {
+      params.password = await bcrypt.hash(password, 10);
+    }
+
+    return super.save(params);
   }
 
-  public async createUser(name: string, password: string) {
+  async createUser(name: string, password: string) {
     // const { length } = await User.find({ name }).exec();
     // if (length >= 1) {
     //   return {
@@ -34,17 +41,53 @@ export class UserService {
     await new User({ name, password: hash }).save(); // error handled by setErrorConfig
   }
 
-  public async updateUser(id: string, params: IUser) {
+  async login(account: string, password: string) {
+    const type = this.getAccountType(account);
+
+    const user: any = await User.findOne(
+      { [type]: account },
+      'name password'
+    ).exec();
+
+    return {
+      match: await bcrypt.compare(password, user.password),
+      user,
+    };
+  }
+
+  async update(id: string, params: IUser) {
     const { password } = params;
 
     if (password) {
       params.password = await bcrypt.hash(password, 10);
     }
 
-    await User.findByIdAndUpdate(id, params).exec();
+    return super.update(id, params);
   }
 
-  public async deleteUser(id: string) {
-    await User.findByIdAndDelete(id).exec(); // findByIdAndRemove findOneAndDelete
+  /**
+   * 验证用户
+   *
+   * @param {string} account name/email/phone
+   * @returns {boolean} exist true：注册过；false：未注册过
+   */
+  async validateAccount(account: string) {
+    const type = this.getAccountType(account);
+
+    const { length } = await User.find({ [type]: account }).exec();
+
+    return length > 0;
   }
+
+  getAccountType = (account: string) => {
+    let type = 'name';
+
+    if (EMAIL_REG.test(account)) {
+      type = 'email';
+    } else if (PHONE_REG.test(account)) {
+      type = 'phone';
+    }
+
+    return type;
+  };
 }

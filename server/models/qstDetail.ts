@@ -1,23 +1,48 @@
-interface IQstDetail {
+import { Schema, model, Types } from 'mongoose';
+
+export interface IQstItem {
   num: number;
   type: string;
-  title?: string;
+  title: string;
   options?: IOption[];
-  required?: boolean;
-  reply?: { [key: string]: string[] };
+  required: boolean;
+  replies?: { [key: string]: string[] };
 }
 
-interface IOption {
-  id: string;
+export interface IOption {
+  // id: string;
   value: string;
 }
 
-interface IFile {
-  id: string;
-  url: string;
-  name?: string;
-  size?: string;
-  cover?: boolean;
+export interface IQstDetail {
+  qstItems: IQstItem[];
+  receivers: { [key in 'department' | 'account']?: string[] };
 }
 
-export { IQstDetail, IOption, IFile };
+const QstItem = new Schema({
+  num: Number,
+  type: String,
+  title: String,
+  options: [{ value: String }],
+  required: Boolean,
+  replies: { type: Map, of: [String], default: {} },
+});
+
+// const Receivers = new Schema({
+//   department: [String],
+//   account: [String],
+// });
+
+const QstDetailSchema = new Schema(
+  {
+    questionId: { type: Types.ObjectId, ref: 'Question', required: true },
+    qstItems: [QstItem],
+    receivers: {
+      department: [String],
+      account: [String],
+    },
+  },
+  { timestamps: true }
+);
+
+export default model('QstDetail', QstDetailSchema);
