@@ -6,7 +6,7 @@ export interface IQstItem {
   title: string;
   options?: IOption[];
   required: boolean;
-  replies?: { [key: string]: string[] };
+  replies?: Array<{ id: string; value: string[] }>;
 }
 
 export interface IOption {
@@ -25,7 +25,8 @@ const QstItem = new Schema({
   title: String,
   options: [{ value: String }],
   required: Boolean,
-  replies: { type: Map, of: [String], default: {} },
+  // replies: { type: Map, of: [String], default: {} },
+  replies: [{ userId: String, value: [String] }],
 });
 
 // const Receivers = new Schema({
@@ -35,14 +36,14 @@ const QstItem = new Schema({
 
 const QstDetailSchema = new Schema(
   {
-    questionId: { type: Types.ObjectId, ref: 'Question', required: true },
+    question: { type: Types.ObjectId, ref: 'Question', required: true },
     qstItems: [QstItem],
     receivers: {
       department: [String],
       account: [String],
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 export default model('QstDetail', QstDetailSchema);

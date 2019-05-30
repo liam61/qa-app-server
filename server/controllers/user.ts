@@ -1,7 +1,7 @@
 import {
   controller,
   response,
-  // request,
+  request,
   requestParam as reqParam,
   requestBody as reqBody,
   httpGet,
@@ -26,7 +26,7 @@ export default class UserController {
 
   @httpGet('/')
   async getUsers(@response() res: Response) {
-    const data = await this.userService.findAll();
+    const data = await this.userService.findAll(null, '-password');
 
     data.length
       ? sendRes(res, 200, 'success', 'get users successfully', data)
@@ -35,14 +35,13 @@ export default class UserController {
 
   @httpGet('/:id')
   async getUserById(@reqParam('id') id: string, @response() res: Response) {
-    const data = await this.userService.findById(id);
+    const data = await this.userService.findById(id, '-password');
 
     data
       ? sendRes(res, 200, 'success', 'get a user successfully', data)
-      : sendRes(res, 400, 'fail', 'user do not exist');
+      : sendRes(res, 404, 'fail', 'user do not exist');
   }
 
-  //  async createUser(req: Request, @response() res: Response) {
   @httpPost('/signup')
   async createUser(@reqBody() body: any, @response() res: Response) {
     const { name, password, validate } = body;
@@ -50,10 +49,9 @@ export default class UserController {
     if (validate !== validateStr) {
       const validateError = new Error('illegal signup without validate');
       validateError.name = 'ValidateError';
-      throw validateError;
+      // throw validateError;
     }
 
-    // await this.userService.createUser(name, password);
     await this.userService.save({ name, password });
 
     sendRes(res, 201, 'success', 'create a user successfully');
@@ -62,7 +60,6 @@ export default class UserController {
   @httpPost('/login')
   async login(@reqBody() body: any, @response() res: Response) {
     const { account, password, validate } = body;
-    // console.log(validateStr);
 
     if (validate !== validateStr) {
       const validateError = new Error('illegal login without validate');
@@ -71,14 +68,14 @@ export default class UserController {
     }
 
     const {
-      match,
-      user: { _id, name },
+      matched,
+      user: { _id: id, name },
     } = await this.userService.login(account, password);
 
-    if (match) {
-      const token = jwt.sign({ id: _id, name }, JWT_KEY, { expiresIn: '1h' });
+    if (matched) {
+      const token = jwt.sign({ id, name }, JWT_KEY, { expiresIn: '1h' });
 
-      sendRes(res, 200, 'success', 'login successfully', { token });
+      sendRes(res, 200, 'success', 'login successfully', { token, id });
 
       return;
     }
@@ -90,7 +87,7 @@ export default class UserController {
   @httpGet('/validate/:account')
   async validateAccount(
     @reqParam('account') account: string,
-    @response() res: Response,
+    @response() res: Response
   ) {
     const exist = await this.userService.validateAccount(account);
 
@@ -100,18 +97,20 @@ export default class UserController {
       res,
       200,
       'success',
-      exist ? 'account is available' : 'account already exists',
-      { exist, validate: validateStr },
+      exist ? 'account already exists' : 'account is not exist',
+      { exist, validate: validateStr }
     );
   }
 
   @httpPut('/:id', authMiddleware)
   async updateUser(
-    @reqParam('id') id: string,
+    @request() req: any,
     @reqBody() body: IUser,
-    @response() res: Response,
+    @response() res: Response
   ) {
-    await this.userService.update(id, body);
+    const { id } = req.user;
+
+    await this.userService.updateById(id, body);
 
     sendRes(res, 200, 'success', 'update user successfully');
   }

@@ -12,21 +12,27 @@ export default class QstDetailService extends BaseService<
     super(QstDetail);
   }
 
-  // 不能让用户获取到其他用户提交的问题答案，所以 replies 不能覆盖上传，只能通过 id 判断
-  async reply(detailId: string, replies: any[], userId: string) {
-    const data: any = await super.findOne({ _id: detailId }, 'qstItems');
-    const qstItems = data.qstItems.toObject();
+  // 不能让用户获取到其他用户提交的问题答案，所以 replies 不能覆盖上传，只能通过 id 遍历判断
+  async reply(id: string, userId: string, replies: any[]) {
+    const { qstItems }: any = await this.findOne({ _id: id }, 'qstItems');
 
-    replies.forEach((reply: any) => {
-      const { id, replies: r } = reply;
+    qstItems.forEach((qstItem: any) => {
+      replies.forEach((reply: any) => {
+        if (reply.pushed) {
+          return;
+        }
 
-      qstItems.forEach((qstItem: any) => {
-        if (qstItem._id.toString() === id) {
-          qstItem.replies.set(userId, r);
+        const { id: itemId, replies: r } = reply;
+
+        if (qstItem._id.toString() === itemId) {
+          // qstItem.replies.set(userId, r);
+          qstItem.replies.push({ userId, value: r });
+
+          reply.pushed = true;
         }
       });
     });
 
-    return await super.update(detailId, { qstItems });
+    return await this.updateById(id, { qstItems });
   }
 }

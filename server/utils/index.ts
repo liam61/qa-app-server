@@ -1,7 +1,15 @@
-import { sendRes, sendErr } from './response';
-import uid from 'uid';
+import path from 'path';
 import { PREFIX } from '../common/global';
 import { Types } from 'mongoose';
+import uid from 'uid';
+import { sendRes, sendErr } from './response';
+import Uploader from './uploader';
+
+const cwd = process.cwd();
+
+function resolve(...filePath: string[]) {
+  return path.join(cwd, ...filePath);
+}
 
 function getUid(len = 10) {
   return `${PREFIX}-${uid(len)}`;
@@ -12,7 +20,16 @@ function getObjectId() {
 }
 
 function getLocalDate(date: Date) {
-  return date.toLocaleString('zh', { hour12: false }).replace(/\//g, '-');
+  // return date.toLocaleString('zh', { hour12: false }).replace(/\//g, '-');
+  return date.toLocaleString().replace(/\//g, '-');
 }
 
-export { getUid, getObjectId, getLocalDate, sendRes, sendErr };
+export {
+  resolve,
+  getUid,
+  getObjectId,
+  getLocalDate,
+  sendRes,
+  sendErr,
+  Uploader,
+};

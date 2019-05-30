@@ -1,7 +1,7 @@
 import { Schema, model, Types } from 'mongoose';
 
 export interface IQuestion {
-  userId: string;
+  user: string;
   title?: string;
   content?: string;
   files?: IFile[];
@@ -10,7 +10,6 @@ export interface IQuestion {
   showAuthor?: boolean;
   expire?: string;
   type?: string;
-  date?: string;
   read?: number;
   unread?: number;
 }
@@ -34,14 +33,13 @@ const fileSchema = new Schema({
 
 const questionSchema = new Schema(
   {
-    userId: { type: Types.ObjectId, ref: 'User', required: true }, // 关联
+    user: { type: Types.ObjectId, ref: 'User', required: true }, // 关联
     title: String,
     content: String,
     files: [fileSchema],
     secret: Boolean,
     anonymous: Boolean,
     showAuthor: Boolean,
-    date: String,
     expire: String,
     type: String,
     read: Number,

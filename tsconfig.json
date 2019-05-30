@@ -18,7 +18,8 @@
     ],
     "outDir": "dist",
     "types": [
-      "reflect-metadata"
+      "reflect-metadata",
+      "node"
     ],
     "sourceMap": true,
     "strict": true,

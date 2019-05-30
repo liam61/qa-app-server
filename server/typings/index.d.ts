@@ -3,7 +3,8 @@ type resType = 'success' | 'fail' | 'info';
 interface IResponse {
   status: number;
   statusText: string;
-  data: { type: resType; message: string; [key: string]: any };
+  data?: { type: resType; message: string; [key: string]: any };
+  lists?: any[];
 }
 
 interface IErrRes {

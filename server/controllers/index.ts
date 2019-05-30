@@ -1,5 +1,11 @@
 import UserController from './user';
 import QuestionController from './question';
 import QstDetailController from './qstDetail';
+import UploadController from './upload';
 
-export { UserController, QuestionController, QstDetailController };
+export {
+  UploadController,
+  UserController,
+  QuestionController,
+  QstDetailController,
+};
