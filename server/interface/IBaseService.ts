@@ -10,7 +10,7 @@ export default interface IBaseService {
   findOne(
     conditions: any,
     projection?: any,
-    sort?: any
+    sort?: any,
   ): Promise<Document | null>;
 
   save(params: any): Promise<Document>;

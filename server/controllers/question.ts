@@ -23,7 +23,7 @@ export default class QuestionController {
   constructor(
     @inject(TYPES.QuestionService) private qstService: QuestionService,
     @inject(TYPES.QstDetailService) private qDetailService: QstDetailService,
-    @inject(TYPES.UserService) private userService: UserService
+    @inject(TYPES.UserService) private userService: UserService,
   ) {}
 
   // 获取被指定的问题
@@ -48,7 +48,7 @@ export default class QuestionController {
   async getQuestionOfSelf(
     @request() req: any,
     @reqParam('id') userId: string,
-    @response() res: Response
+    @response() res: Response,
   ) {
     const { id } = req.user;
 
@@ -75,7 +75,7 @@ export default class QuestionController {
     @request() req: any,
     @reqParam('id') id: string, // detailId
     @queryParam('poster') poster: string,
-    @response() res: Response
+    @response() res: Response,
   ) {
     const { id: userId } = req.user;
 
@@ -95,7 +95,7 @@ export default class QuestionController {
           200,
           'success',
           'get a question detail successfully',
-          data.toObject()
+          data.toObject(),
         )
       : sendRes(res, 400, 'fail', 'question do not exist');
   }
@@ -104,7 +104,7 @@ export default class QuestionController {
   async createQuestion(
     @request() req: any,
     @reqBody() body: any,
-    @response() res: Response
+    @response() res: Response,
   ) {
     const { id } = req.user; // poster id
     const { _id } = await this.qstService.save({ user: id, ...body });
@@ -134,7 +134,7 @@ export default class QuestionController {
   async updateQuestion(
     @reqParam('id') id: string,
     @reqBody() body: IQuestion,
-    @response() res: Response
+    @response() res: Response,
   ) {
     await this.qstService.updateById(id, body);
 
@@ -146,13 +146,13 @@ export default class QuestionController {
     @request() req: any,
     @reqParam('id') detailId: string, // detailId
     @reqBody() body: any[],
-    @response() res: Response
+    @response() res: Response,
   ) {
     const { id: userId } = req.user;
 
     const { question: qstId }: any = await this.qDetailService.findById(
       detailId,
-      'question'
+      'question',
     );
 
     await this.qDetailService.reply(detailId, userId, body);
@@ -162,7 +162,7 @@ export default class QuestionController {
       userId,
       qstId,
       'unfilled',
-      'completed'
+      'completed',
     );
 
     // 更新 poster 的 post 状态
@@ -172,7 +172,7 @@ export default class QuestionController {
       posterId,
       qstId,
       'unfilled',
-      'completed'
+      'completed',
     );
 
     sendRes(res, 200, 'success', 'submit question successfully');

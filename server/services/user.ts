@@ -31,7 +31,7 @@ export default class UserService extends BaseService<typeof User, IUser> {
 
     const user: any = await User.findOne(
       { [type]: account },
-      'name password'
+      'name password',
     ).exec();
 
     return {
@@ -54,7 +54,7 @@ export default class UserService extends BaseService<typeof User, IUser> {
     id: string,
     questionId: string,
     from: qstStatusType,
-    to: qstStatusType
+    to: qstStatusType,
   ) {
     const { todos }: any = await super.findById(id, 'todos');
 
@@ -73,7 +73,7 @@ export default class UserService extends BaseService<typeof User, IUser> {
     id: string,
     questionId: string,
     from: qstStatusType,
-    to: qstStatusType
+    to: qstStatusType,
   ) {
     const { posts }: any = await this.findById(id, 'posts');
 
@@ -113,5 +113,5 @@ export default class UserService extends BaseService<typeof User, IUser> {
     }
 
     return type;
-  };
+  }
 }

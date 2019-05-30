@@ -23,7 +23,7 @@ export default class QuestionService extends BaseService<
 
     const lists = await this.genListsWithSection(
       data,
-      questions.map(q => q.status)
+      questions.map(q => q.status),
     );
 
     return { lists, total: data.length, newer };
@@ -60,7 +60,7 @@ export default class QuestionService extends BaseService<
       async (
         arrPromise: Promise<any[]>,
         qstPromise: Promise<any>,
-        i: number
+        i: number,
       ) => {
         const arr = await arrPromise;
         // qst.status = todos[i].status; // 不能赋值上去
@@ -91,7 +91,7 @@ export default class QuestionService extends BaseService<
 
         return arr;
       },
-      []
+      [],
     );
   }
 

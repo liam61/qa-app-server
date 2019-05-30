@@ -69,7 +69,7 @@ const userSchema = new Schema(
     todos: [todoSchema],
     posts: [postSchema],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default model('User', userSchema);

@@ -35,5 +35,5 @@ server
 server
   .build()
   .listen(PORT, () =>
-    console.log(`your server is running at http://localhost:${PORT} :)`)
+    console.log(`your server is running at http://localhost:${PORT} :)`),
   );

@@ -8,7 +8,7 @@ function sendRes(
   status: number,
   type: resType,
   message: string,
-  data?: any
+  data?: any,
 ) {
   const retJson = {
     status,

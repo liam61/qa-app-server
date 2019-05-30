@@ -5,7 +5,7 @@ const errorHandler = (
   err: any,
   _req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) => {
   console.log(err.stack);
 
