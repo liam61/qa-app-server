@@ -27,11 +27,11 @@ export default class UserService extends BaseService<typeof User, IUser> {
   }
 
   async login(account: string, password: string) {
-    const type = this.getAccountType(account);
-
+    // const type = this.getAccountType(account);
+    // const user: any = await User.findOne({ [type]: account }, 'name password').exec();
     const user: any = await User.findOne(
-      { [type]: account },
-      'name password',
+      { $or: [{ email: account }, { phone: account }, { name: account }] },
+      'name password'
     ).exec();
 
     return {
@@ -50,12 +50,7 @@ export default class UserService extends BaseService<typeof User, IUser> {
     return super.updateById(id, params);
   }
 
-  async updateTodoStatus(
-    id: string,
-    questionId: string,
-    from: qstStatusType,
-    to: qstStatusType,
-  ) {
+  async updateTodoStatus(id: string, questionId: string, from: qstStatusType, to: qstStatusType) {
     const { todos }: any = await super.findById(id, 'todos');
 
     todos.forEach((todo: ITodo) => {
@@ -69,12 +64,7 @@ export default class UserService extends BaseService<typeof User, IUser> {
     return await super.updateById(id, { todos });
   }
 
-  async updatePostStatus(
-    id: string,
-    questionId: string,
-    from: qstStatusType,
-    to: qstStatusType,
-  ) {
+  async updatePostStatus(id: string, questionId: string, from: qstStatusType, to: qstStatusType) {
     const { posts }: any = await this.findById(id, 'posts');
 
     // TODO: 获取所有人 receiver 情况，来判断是否是所有人都阅读或填写
@@ -89,6 +79,19 @@ export default class UserService extends BaseService<typeof User, IUser> {
     return await super.updateById(id, { posts });
   }
 
+  async isCompletePost(receivers: any, qstId: string) {
+    const { account } = receivers;
+
+    const statusArr: string[] = account.map(async (userId: string) => {
+      const { todos }: any = await this.findById(userId, 'todos');
+
+      return todos.find((t: ITodo) => t.questionId === qstId).status;
+    });
+
+    // return statusArr.every(s => s === 'completed') ? { change: true, status: 'completed' } : { change: false };
+    return statusArr.every(s => s === 'completed');
+  }
+
   /**
    * 验证用户
    *
@@ -96,9 +99,12 @@ export default class UserService extends BaseService<typeof User, IUser> {
    * @returns {boolean} exist true：注册过；false：未注册过
    */
   async validateAccount(account: string) {
-    const type = this.getAccountType(account);
-
-    const { length } = await User.find({ [type]: account }).exec();
+    // const type = this.getAccountType(account);
+    // const { length } = await User.find({ [type]: account }, 'name').exec();
+    const { length } = await User.find(
+      { $or: [{ email: account }, { phone: account }, { name: account }] },
+      'name'
+    ).exec();
 
     return length > 0;
   }
@@ -113,5 +119,5 @@ export default class UserService extends BaseService<typeof User, IUser> {
     }
 
     return type;
-  }
+  };
 }

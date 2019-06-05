@@ -6,6 +6,8 @@ const TYPES = {
   UserService: Symbol.for('UserService'),
   QuestionService: Symbol.for('QuestionService'),
   QstDetailService: Symbol.for('QstDetailService'),
+  FriendService: Symbol.for('FriendService'),
+  MessageService: Symbol.for('MessageService'),
 };
 
 export default TYPES;

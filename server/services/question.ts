@@ -5,14 +5,10 @@ import TYPES from '../constant/types';
 import BaseService from './base';
 import { getLocalDate } from '../utils';
 
-const getSection = (date: Date) =>
-  date.toLocaleString('zh', { year: 'numeric', month: '2-digit' });
+const getSection = (date: Date) => date.toLocaleString('zh', { year: 'numeric', month: '2-digit' });
 
 @provide(TYPES.QuestionService)
-export default class QuestionService extends BaseService<
-  typeof Question,
-  IQuestion
-> {
+export default class QuestionService extends BaseService<typeof Question, IQuestion> {
   constructor() {
     super(Question);
   }
@@ -21,10 +17,7 @@ export default class QuestionService extends BaseService<
   async getQuestions(questions: any[], fromSelf: boolean): Promise<any> {
     const { data, newer } = await this.getQstsByIds(questions, fromSelf);
 
-    const lists = await this.genListsWithSection(
-      data,
-      questions.map(q => q.status),
-    );
+    const lists = await this.genListsWithSection(data, questions.map(q => q.status));
 
     return { lists, total: data.length, newer };
   }
@@ -36,10 +29,7 @@ export default class QuestionService extends BaseService<
     const data: any[] = qsts.map(async qst => {
       const { questionId, status } = qst;
 
-      if (
-        (status === 'unfilled' && !fromSelf) ||
-        (status === 'completed' && fromSelf)
-      ) {
+      if ((status === 'unfilled' && !fromSelf) || (status === 'completed' && fromSelf)) {
         newer += 1;
       }
 
@@ -56,43 +46,36 @@ export default class QuestionService extends BaseService<
     let section = '';
     let count = 0;
 
-    return data.reduce(
-      async (
-        arrPromise: Promise<any[]>,
-        qstPromise: Promise<any>,
-        i: number,
-      ) => {
-        const arr = await arrPromise;
-        // qst.status = todos[i].status; // 不能赋值上去
-        const qstPre = (await qstPromise).toObject();
+    return data.reduce(async (arrPromise: Promise<any[]>, qstPromise: Promise<any>, i: number) => {
+      const arr = await arrPromise;
+      // qst.status = todos[i].status; // 不能赋值上去
+      const qstPre = (await qstPromise).toObject();
 
-        const qst = Object.assign(qstPre, {
-          status: status[i],
-          date: getLocalDate(qstPre.createdAt).slice(5, 12),
-        });
+      const qst = Object.assign(qstPre, {
+        status: status[i],
+        date: getLocalDate(qstPre.createdAt).slice(5, 12),
+      });
 
-        if (i === 0) {
-          section = getSection(qst.createdAt);
+      if (i === 0) {
+        section = getSection(qst.createdAt);
 
-          arr.push({ data: [qst], section });
-
-          return arr;
-        }
-
-        const secCur = getSection(qst.createdAt);
-
-        if (secCur === section) {
-          arr[count].data.push(qst);
-        } else {
-          section = secCur;
-          arr.push({ data: [qst], section });
-          count += 1;
-        }
+        arr.push({ data: [qst], section });
 
         return arr;
-      },
-      [],
-    );
+      }
+
+      const secCur = getSection(qst.createdAt);
+
+      if (secCur === section) {
+        arr[count].data.push(qst);
+      } else {
+        section = secCur;
+        arr.push({ data: [qst], section });
+        count += 1;
+      }
+
+      return arr;
+    }, []);
   }
 
   async findDetailsById(id: string) {

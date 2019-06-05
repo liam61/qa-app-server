@@ -16,7 +16,7 @@ const PASSWORD_REG = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
 const QST_STATUS = [
   { key: 'unread', value: '未读' }, // 不是所有人都阅读过
   { key: 'unfilled', value: '未填写' }, // 不是所有人有填写了
-  { key: 'completed', value: '已完成' }, // 所有人都填写了
+  { key: 'completed', value: '已完成' }, // 所有人都填写了，已出报告
   { key: 'expired', value: '已过期' },
 ];
 

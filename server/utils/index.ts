@@ -11,6 +11,9 @@ function resolve(...filePath: string[]) {
   return path.join(cwd, ...filePath);
 }
 
+// tslint:disable-next-line: no-empty
+function emptyFn() {}
+
 function getUid(len = 10) {
   return `${PREFIX}-${uid(len)}`;
 }
@@ -24,12 +27,14 @@ function getLocalDate(date: Date) {
   return date.toLocaleString().replace(/\//g, '-');
 }
 
-export {
-  resolve,
-  getUid,
-  getObjectId,
-  getLocalDate,
-  sendRes,
-  sendErr,
-  Uploader,
-};
+function getSortedIds(user1: string, user2: string) {
+  if (user1 < user2) {
+    const temp = user1;
+    user1 = user2;
+    user2 = temp;
+  }
+
+  return { user1, user2 };
+}
+
+export { resolve, emptyFn, getUid, getObjectId, getLocalDate, sendRes, sendErr, Uploader, getSortedIds };

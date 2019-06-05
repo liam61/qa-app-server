@@ -4,10 +4,7 @@ import TYPES from '../constant/types';
 import BaseService from './base';
 
 @provide(TYPES.QstDetailService)
-export default class QstDetailService extends BaseService<
-  typeof QstDetail,
-  IQstDetail
-> {
+export default class QstDetailService extends BaseService<typeof QstDetail, IQstDetail> {
   constructor() {
     super(QstDetail);
   }

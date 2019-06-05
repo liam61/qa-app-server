@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { InversifyExpressServer } from 'inversify-express-utils';
 import { makeLoggerMiddleware } from 'inversify-logger-middleware';
 import bodyParser from 'body-parser';
+import websocket from './ws';
 import { defaultResMiddleware, errorMiddleware } from './middleware';
 import { container, buildProviderModule, serverStatic } from './ioc/ioc';
 import helmet from 'helmet';
@@ -23,17 +24,18 @@ if (process.env.NODE_ENV === 'development') {
 const server = new InversifyExpressServer(container);
 
 server
-  .setConfig(app => {
+  .setConfig((app: any) => {
     app.use(`/${STATIC_PATH}`, serverStatic(resolve('server/uploads')));
     app.use(bodyParser.urlencoded({ extended: false })); // allow querystring
     app.use(bodyParser.json());
     app.use(defaultResMiddleware);
     app.use(helmet());
+
+    websocket('/ws/:id', app);
+
+    // const wsServer = expressWs(app);
+    // app.ws('/ws', authMiddleware, wsMiddleware);
   })
   .setErrorConfig(app => app.use(errorMiddleware));
 
-server
-  .build()
-  .listen(PORT, () =>
-    console.log(`your server is running at http://localhost:${PORT} :)`),
-  );
+server.build().listen(PORT, () => console.log(`your server is running at http://localhost:${PORT} :)`));

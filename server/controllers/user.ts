@@ -85,29 +85,19 @@ export default class UserController {
 
   // for login and signup
   @httpGet('/validate/:account')
-  async validateAccount(
-    @reqParam('account') account: string,
-    @response() res: Response,
-  ) {
+  async validateAccount(@reqParam('account') account: string, @response() res: Response) {
     const exist = await this.userService.validateAccount(account);
 
     validateStr = getUid();
 
-    sendRes(
-      res,
-      200,
-      'success',
-      exist ? 'account already exists' : 'account is not exist',
-      { exist, validate: validateStr },
-    );
+    sendRes(res, 200, 'success', exist ? 'account already exists' : 'account is not exist', {
+      exist,
+      validate: validateStr,
+    });
   }
 
   @httpPut('/:id', authMiddleware)
-  async updateUser(
-    @request() req: any,
-    @reqBody() body: IUser,
-    @response() res: Response,
-  ) {
+  async updateUser(@request() req: any, @reqBody() body: IUser, @response() res: Response) {
     const { id } = req.user;
 
     await this.userService.updateById(id, body);

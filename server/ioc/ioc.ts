@@ -1,16 +1,6 @@
 import { Container, inject, unmanaged } from 'inversify';
-import {
-  autoProvide,
-  provide,
-  buildProviderModule,
-  fluentProvide,
-} from 'inversify-binding-decorators';
-import {
-  Request,
-  Response,
-  NextFunction,
-  static as serverStatic,
-} from 'express';
+import { autoProvide, provide, buildProviderModule, fluentProvide } from 'inversify-binding-decorators';
+import { Request, Response, NextFunction, static as serverStatic } from 'express';
 import TYPES from '../constant/types';
 
 // load everything needed to the Container

@@ -7,17 +7,15 @@ export default interface IBaseService {
 
   findById(id: idType, projection?: any, sort?: any): Promise<Document | null>;
 
-  findOne(
-    conditions: any,
-    projection?: any,
-    sort?: any,
-  ): Promise<Document | null>;
+  findOne(conditions: any, projection?: any, sort?: any): Promise<Document | null>;
 
   save(params: any): Promise<Document>;
 
   updateOne(conditions: any, update?: any): Promise<Document | null>;
 
   updateById(id: idType, params: any): Promise<Document | null>;
+
+  deleteOne(conditions: any): Promise<Document | null>;
 
   deleteById(id: idType): Promise<Document | null>;
 }

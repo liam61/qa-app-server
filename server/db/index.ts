@@ -8,7 +8,7 @@ const defaultOpts: ConnectionOptions = {
 };
 
 class MongoDBClient {
-  static instance: any;
+  static instance: MongoDBClient;
 
   constructor(url: string, options: ConnectionOptions) {
     connect(url, options);
@@ -21,19 +21,16 @@ class MongoDBClient {
     if (!this.instance) {
       this.instance = new MongoDBClient(url, options);
     }
+
     return this.instance;
   }
 
   initListeners() {
     connection.on('connected', () => console.log('mongodb connection succeed'));
 
-    connection.on('error', error =>
-      console.log('mongodb connection failed', error),
-    );
+    connection.on('error', error => console.log('mongodb connection failed', error));
 
-    connection.on('disconnected', error =>
-      console.log('mongodb is disconnected', error),
-    );
+    connection.on('disconnected', error => console.log('mongodb is disconnected', error));
   }
 }
 
