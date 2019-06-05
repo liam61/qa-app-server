@@ -45,7 +45,7 @@ const questionSchema = new Schema(
     read: Number,
     unread: Number,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default model('Question', questionSchema);

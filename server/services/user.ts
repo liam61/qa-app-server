@@ -31,7 +31,7 @@ export default class UserService extends BaseService<typeof User, IUser> {
     // const user: any = await User.findOne({ [type]: account }, 'name password').exec();
     const user: any = await User.findOne(
       { $or: [{ email: account }, { phone: account }, { name: account }] },
-      'name password'
+      'name password',
     ).exec();
 
     return {
@@ -103,7 +103,7 @@ export default class UserService extends BaseService<typeof User, IUser> {
     // const { length } = await User.find({ [type]: account }, 'name').exec();
     const { length } = await User.find(
       { $or: [{ email: account }, { phone: account }, { name: account }] },
-      'name'
+      'name',
     ).exec();
 
     return length > 0;
@@ -119,5 +119,5 @@ export default class UserService extends BaseService<typeof User, IUser> {
     }
 
     return type;
-  };
+  }
 }

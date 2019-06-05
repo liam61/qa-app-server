@@ -16,7 +16,7 @@ const MessageSchema = new Schema(
     content: String,
     type: { type: String, default: 'text' },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default model('Message', MessageSchema);

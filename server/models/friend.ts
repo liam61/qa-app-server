@@ -18,7 +18,7 @@ const FriendSchema = new Schema(
     receiver: String, // 接受人
     success: Boolean, // 添加成功
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default model('Friend', FriendSchema);

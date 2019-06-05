@@ -38,7 +38,7 @@ class WSController {
     private path: string,
     private app: Application,
     private server?: hServer | hsServer,
-    private options?: Options
+    private options?: Options,
   ) {
     this.wsServer = expressWs(this.app, this.server, this.options);
 
@@ -84,7 +84,7 @@ class WSController {
       // this.clientMap.delete(id);
       console.log(`a client has disconnected, closeCode: ${closeCode}`);
     });
-  };
+  }
 
   initHeartbeat(during: number = 10000) {
     return setInterval(() => {

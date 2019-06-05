@@ -18,7 +18,7 @@ import { authMiddleware } from '../middleware';
 export default class MessageController {
   constructor(
     @inject(TYPES.FriendService) private friendService: FriendService,
-    @inject(TYPES.MessageService) private msgService: MessageService
+    @inject(TYPES.MessageService) private msgService: MessageService,
   ) {}
 
   @httpGet('/') // 不能使用 params 参数，因为这里的 id 应该指的是 message model id 而不是 user id
