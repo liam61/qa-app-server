@@ -6,6 +6,7 @@ const TAGS = {
   QstDetailController: 'QstDetailController',
   UploadController: 'UploadController',
   FriendController: 'FriendController',
+  DepartmentController: 'DepartmentController',
 };
 
 export default TAGS;

@@ -1,6 +1,6 @@
-import { provide } from '../ioc/ioc';
-import Message, { IMessage } from '../models/message';
-import TYPES from '../constant/types';
+import { provide } from 'ioc/ioc';
+import Message, { IMessage } from 'models/message';
+import TYPES from 'constant/types';
 import BaseService from './base';
 
 @provide(TYPES.MessageService)

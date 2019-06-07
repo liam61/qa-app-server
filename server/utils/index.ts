@@ -1,5 +1,5 @@
 import path from 'path';
-import { PREFIX } from '../common/global';
+import { PREFIX } from 'common';
 import { Types } from 'mongoose';
 import uid from 'uid';
 import { sendRes, sendErr } from './response';
@@ -35,6 +35,7 @@ function getSortedIds(user1: string, user2: string) {
   }
 
   return { user1, user2 };
+  // return user1 < user2 ? { user1: user2 } : { user1: user2, user2: user1 };
 }
 
 export { resolve, emptyFn, getUid, getObjectId, getLocalDate, sendRes, sendErr, Uploader, getSortedIds };

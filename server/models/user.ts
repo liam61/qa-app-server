@@ -1,7 +1,8 @@
-import { Schema, model } from 'mongoose';
-import { USER_REG, EMAIL_REG, PHONE_REG } from '../common/global';
+import { Schema, model, Types } from 'mongoose';
+import { USER_REG, EMAIL_REG, PHONE_REG } from 'common';
 
 export interface IUser {
+  department?: string;
   name?: string;
   password?: string;
   email?: string;
@@ -49,6 +50,7 @@ const postSchema = new Schema({
 
 const userSchema = new Schema(
   {
+    department: { type: Types.ObjectId, ref: 'Department', required: true }, // 关联
     name: {
       type: String,
       required: true,
@@ -69,7 +71,7 @@ const userSchema = new Schema(
     todos: [todoSchema],
     posts: [postSchema],
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 export default model('User', userSchema);

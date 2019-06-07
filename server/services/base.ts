@@ -1,7 +1,7 @@
-import { provide, unmanaged } from '../ioc/ioc';
-import TYPES from '../constant/types';
+import { provide, unmanaged } from 'ioc/ioc';
+import TYPES from 'constant/types';
 import { Model, Document } from 'mongoose';
-import IBaseService, { idType } from '../interface/IBaseService';
+import IBaseService, { idType } from 'interface/IBaseService';
 
 /**
  * 通用的 service 抽象类

@@ -1,15 +1,24 @@
 import httpCode from 'http-status-code';
 import { Response } from 'express';
-// import { IResponse, resType, IErrRes } from '../typings';
-import { resType } from '../typings';
 
-function sendRes(
-  res: Response,
-  status: number,
-  type: resType,
-  message: string,
-  data?: any,
-) {
+type resType = 'success' | 'fail' | 'info';
+
+interface IResponse {
+  status: number;
+  statusText: string;
+  data?: { type: resType; message: string; [key: string]: any };
+  lists?: any[];
+}
+
+interface IErrRes {
+  status: number;
+  statusText: string;
+  data: { errcode: number; errmsg: string };
+}
+
+// export { IResponse, IErrRes, resType };
+
+function sendRes(res: Response, status: number, type: resType, message: string, data?: any) {
   const retJson = {
     status,
     statusText: httpCode.getMessage(status),
@@ -27,4 +36,4 @@ function sendErr(res: Response, status: number, errmsg: string) {
   res.status(200).json(retJson);
 }
 
-export { sendRes, sendErr };
+export { sendRes, sendErr, IResponse, IErrRes, resType };

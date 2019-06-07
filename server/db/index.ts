@@ -1,5 +1,5 @@
 import { connect, connection, ConnectionOptions } from 'mongoose';
-import { CONN_STR } from '../common/global';
+import { CONN_STR } from 'common';
 
 const defaultOpts: ConnectionOptions = {
   useNewUrlParser: true,

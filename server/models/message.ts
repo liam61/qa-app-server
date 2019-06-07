@@ -1,7 +1,8 @@
 import { Schema, model, Types } from 'mongoose';
 
 export interface IMessage {
-  // id: string;
+  _id: string;
+  friend: string;
   from?: string;
   to: string;
   content: string;
@@ -16,7 +17,7 @@ const MessageSchema = new Schema(
     content: String,
     type: { type: String, default: 'text' },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 export default model('Message', MessageSchema);

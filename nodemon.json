@@ -4,8 +4,8 @@
   ],
   "ext": "ts",
   "ignore": [
-    "src/**/*.spec.ts"
+    "server/**/*.spec.ts"
   ],
-  "exec": "ts-node server/bootstrap",
+  "exec": "ts-node -r tsconfig-paths/register server/bootstrap",
   "delay": "500"
 }

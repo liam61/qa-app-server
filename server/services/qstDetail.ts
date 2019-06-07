@@ -1,6 +1,6 @@
-import { provide } from '../ioc/ioc';
-import QstDetail, { IQstDetail } from '../models/qstDetail';
-import TYPES from '../constant/types';
+import { provide } from 'ioc/ioc';
+import QstDetail, { IQstDetail } from 'models/qstDetail';
+import TYPES from 'constant/types';
 import BaseService from './base';
 
 @provide(TYPES.QstDetailService)

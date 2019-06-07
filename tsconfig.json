@@ -1,12 +1,11 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "./server",
     "paths": {
-      "http-status-code": [
-        "server/typings/http-status-code.d.ts",
-      ],
-      "uid": [
-        "server/typings/uid.d.ts"
+      "*": [
+        "*",
+        "../node_modules/@types",
+        "../typings/*"
       ]
     },
     "module": "commonjs",
@@ -24,6 +23,8 @@
     "sourceMap": true,
     "strict": true,
     "importHelpers": true,
+    "skipLibCheck": true,
+    "preserveSymlinks": true,
     /* Enable all strict type-checking options. */
     "noImplicitAny": true,
     /* Raise error on expressions and declarations with an implied 'any' type. */
@@ -59,6 +60,6 @@
   ],
   "exclude": [
     "node_modules",
-    "types"
+    "typings"
   ]
 }

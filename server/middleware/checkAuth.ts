@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
-import { sendErr } from '../utils';
-import { Response, NextFunction } from '../ioc/ioc';
-import { JWT_KEY } from '../common/global';
+import { sendErr } from 'utils';
+import { Response, NextFunction } from 'ioc/ioc';
+import { JWT_KEY } from 'common';
 
 const checkAuth = (req: any, res: Response, next: NextFunction) => {
   try {

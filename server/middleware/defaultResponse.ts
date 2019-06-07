@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from '../ioc/ioc';
+import { Request, Response, NextFunction } from 'ioc/ioc';
 
 const defaultResponse = (req: Request, res: Response, next: NextFunction) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:3000');

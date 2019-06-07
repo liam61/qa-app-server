@@ -8,6 +8,7 @@ const TYPES = {
   QstDetailService: Symbol.for('QstDetailService'),
   FriendService: Symbol.for('FriendService'),
   MessageService: Symbol.for('MessageService'),
+  DepartmentService: Symbol.for('DepartmentService'),
 };
 
 export default TYPES;

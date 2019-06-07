@@ -1,9 +1,9 @@
-import { provide } from '../ioc/ioc';
-import Question, { IQuestion } from '../models/question';
-// import { ITodo, IPost } from './../models/user';
-import TYPES from '../constant/types';
+import { provide } from 'ioc/ioc';
+import Question, { IQuestion } from 'models/question';
+// import { ITodo, IPost } from 'models/user';
+import TYPES from 'constant/types';
 import BaseService from './base';
-import { getLocalDate } from '../utils';
+import { getLocalDate } from 'utils';
 
 const getSection = (date: Date) => date.toLocaleString('zh', { year: 'numeric', month: '2-digit' });
 

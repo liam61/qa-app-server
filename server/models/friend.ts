@@ -13,7 +13,7 @@ const FriendSchema = new Schema(
   {
     user1: { type: Types.ObjectId, ref: 'User', required: true }, // user1Id < user2Id
     user2: { type: Types.ObjectId, ref: 'User', required: true },
-    lastedMsg: { type: Types.ObjectId, ref: 'Message' },
+    lastMessage: { type: Types.ObjectId, ref: 'Message' },
     applicant: String, // 申请人
     receiver: String, // 接受人
     success: Boolean, // 添加成功

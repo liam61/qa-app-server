@@ -4,6 +4,7 @@ import QuestionService from './question';
 import QstDetailService from './qstDetail';
 import FriendService from './friend';
 import MessageService from './message';
+import DepartmentService from './department';
 
 export {
   // IndexService,
@@ -13,4 +14,5 @@ export {
   QstDetailService,
   FriendService,
   MessageService,
+  DepartmentService,
 };

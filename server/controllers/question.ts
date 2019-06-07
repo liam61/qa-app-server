@@ -11,12 +11,12 @@ import {
   httpDelete,
   httpPatch,
 } from 'inversify-express-utils';
-import { inject, TYPES, Response } from '../ioc/ioc';
-import { QuestionService, QstDetailService, UserService } from '../services';
-import { IQuestion } from './../models/question';
-import { sendRes } from '../utils';
-import { VERSION } from '../common/global';
-import { authMiddleware } from '../middleware';
+import { inject, TYPES, Response } from 'ioc/ioc';
+import { QuestionService, QstDetailService, UserService } from 'services';
+import { IQuestion } from 'models/question';
+import { sendRes } from 'utils';
+import { VERSION } from 'common';
+import { authMiddleware } from 'middleware';
 
 @controller(`/${VERSION}/questions`, authMiddleware)
 export default class QuestionController {

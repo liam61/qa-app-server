@@ -11,12 +11,12 @@ import {
   // httpPatch,
 } from 'inversify-express-utils';
 import jwt from 'jsonwebtoken';
-import { inject, TYPES, Response } from '../ioc/ioc';
-import { UserService } from '../services';
-import { IUser } from '../models/user';
-import { sendRes, getUid } from '../utils';
-import { VERSION, JWT_KEY } from '../common/global';
-import { authMiddleware } from '../middleware';
+import { inject, TYPES, Response } from 'ioc/ioc';
+import { UserService } from 'services';
+import { IUser } from 'models/user';
+import { sendRes, getUid } from 'utils';
+import { VERSION, JWT_KEY } from 'common';
+import { authMiddleware } from 'middleware';
 
 let validateStr = '';
 
@@ -28,23 +28,21 @@ export default class UserController {
   async getUsers(@response() res: Response) {
     const data = await this.userService.findAll(null, '-password');
 
-    data.length
-      ? sendRes(res, 200, 'success', 'get users successfully', data)
-      : sendRes(res, 404, 'fail', 'no user exists');
+    sendRes(res, 200, 'success', 'get users successfully', data);
+    // : sendRes(res, 404, 'fail', 'no user exists');
   }
 
   @httpGet('/:id')
   async getUserById(@reqParam('id') id: string, @response() res: Response) {
     const data = await this.userService.findById(id, '-password');
 
-    data
-      ? sendRes(res, 200, 'success', 'get a user successfully', data)
-      : sendRes(res, 404, 'fail', 'user do not exist');
+    sendRes(res, 200, 'success', 'get a user successfully', data);
+    // : sendRes(res, 404, 'fail', 'user do not exist');
   }
 
   @httpPost('/signup')
   async createUser(@reqBody() body: any, @response() res: Response) {
-    const { name, password, validate } = body;
+    const { name, password, validate, dptId } = body;
 
     if (validate !== validateStr) {
       const validateError = new Error('illegal signup without validate');
@@ -52,7 +50,7 @@ export default class UserController {
       // throw validateError;
     }
 
-    await this.userService.save({ name, password });
+    await this.userService.save({ name, password, department: dptId });
 
     sendRes(res, 201, 'success', 'create a user successfully');
   }

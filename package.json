@@ -18,7 +18,8 @@
     "express",
     "inversify",
     "typescript",
-    "question-answer"
+    "question-answer",
+    "qa-app-server"
   ],
   "dependencies": {
     "bcrypt": "^3.0.6",
@@ -59,10 +60,11 @@
     "nodemon": "^1.19.0",
     "pre-commit": "^1.2.2",
     "rimraf": "^2.6.3",
-    "ts-node": "^8.1.0",
+    "ts-node": "^8.2.0",
+    "tsconfig-paths": "^3.8.0",
     "tslint": "^5.16.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-eslint-rules": "^5.4.0",
-    "typescript": "^3.4.5"
+    "typescript": "^3.5.1"
   }
 }

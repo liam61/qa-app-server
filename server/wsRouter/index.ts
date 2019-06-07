@@ -1,10 +1,11 @@
-import { IMessage } from './../models/message';
 import expressWs, { Application, Options } from 'express-ws';
 import ws, { Data } from 'ws';
 // import { Server as hServer, IncomingMessage } from 'http';
 import { Server as hServer } from 'http';
 import { Server as hsServer } from 'https';
-import { emptyFn } from '../utils';
+import Message, { IMessage } from 'models/message';
+import Friend from 'models/friend';
+import { emptyFn } from 'utils';
 
 const defaultOpts: Options = {
   wsOptions: {
@@ -25,8 +26,8 @@ const defaultOpts: Options = {
   },
 };
 
-class WSController {
-  static instance: WSController;
+class WsRouter {
+  static instance: WsRouter;
 
   wsServer: expressWs.Instance;
 
@@ -38,7 +39,7 @@ class WSController {
     private path: string,
     private app: Application,
     private server?: hServer | hsServer,
-    private options?: Options,
+    private options?: Options
   ) {
     this.wsServer = expressWs(this.app, this.server, this.options);
 
@@ -52,28 +53,29 @@ class WSController {
 
   static getInstance(path: string, app: Application, server?: hServer | hsServer, options: Options = defaultOpts) {
     if (!this.instance) {
-      this.instance = new WSController(path, app, server, options);
+      this.instance = new WsRouter(path, app, server, options);
     }
 
     return this.instance;
   }
 
   wsMiddleWare = (wServer: any, req: any) => {
-    // const { id } = req.user || { id: getUid(4) };
     const { id } = req.params;
     console.log('wsMiddleWare', id);
 
     wServer.id = id;
     wServer.isAlive = true;
     this.clientMap.set(id, wServer);
-    // wServer.send(`后台传来的信息！clientId: ${id}`);
 
-    wServer.on('message', (data: Data) => {
-      console.log('message', data);
-      const { to, content }: IMessage = JSON.parse(data.toString());
-      console.log('to', to, content);
+    wServer.on('message', async (data: Data) => {
+      // console.log('message', data);
+      const message: IMessage = JSON.parse(data.toString());
 
-      this.sendMsgToClientById(to, content);
+      // 更新数据库
+      const { _id } = await new Message(message).save();
+      await Friend.findByIdAndUpdate(message.friend, { lastMessage: _id });
+
+      this.sendMsgToClientById(message);
     });
 
     wServer.on('pong', () => {
@@ -84,13 +86,13 @@ class WSController {
       // this.clientMap.delete(id);
       console.log(`a client has disconnected, closeCode: ${closeCode}`);
     });
-  }
+  };
 
   initHeartbeat(during: number = 10000) {
     return setInterval(() => {
       this.clientMap.forEach((client: any) => {
         if (!client.isAlive) {
-          console.log(`a client has timed out, clientId: ${client.id}`);
+          // console.log(`a client has timed out, clientId: ${client.id}`);
           this.clientMap.delete(client.id);
 
           return client.terminate();
@@ -102,11 +104,11 @@ class WSController {
     }, during);
   }
 
-  sendMsgToClientById(id: string, data: Data) {
-    const client: any = this.clientMap.get(id);
+  sendMsgToClientById(message: IMessage) {
+    const client: any = this.clientMap.get(message.to);
 
     if (client) {
-      client!.send(data);
+      client!.send(JSON.stringify(message));
     }
   }
 
@@ -120,4 +122,4 @@ class WSController {
   }
 }
 
-export default WSController.getInstance;
+export default WsRouter.getInstance;

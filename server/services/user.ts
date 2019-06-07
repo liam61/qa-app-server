@@ -1,9 +1,9 @@
-import { provide } from '../ioc/ioc';
+import { provide } from 'ioc/ioc';
 import BaseService from './base';
-import User, { IUser, ITodo, IPost, qstStatusType } from '../models/user';
+import User, { IUser, ITodo, IPost, qstStatusType } from 'models/user';
 import bcrypt from 'bcrypt';
-import TYPES from '../constant/types';
-import { EMAIL_REG, PHONE_REG } from '../common/global';
+import TYPES from 'constant/types';
+import { EMAIL_REG, PHONE_REG } from 'common';
 
 @provide(TYPES.UserService)
 export default class UserService extends BaseService<typeof User, IUser> {

@@ -4,10 +4,10 @@ import {
   response,
   httpPut,
 } from 'inversify-express-utils';
-import { Response } from '../ioc/ioc';
-import { sendRes, Uploader } from '../utils';
-import { VERSION, STATIC_PATH, BASE_URL } from '../common/global';
-import { authMiddleware } from '../middleware';
+import { Response } from 'ioc/ioc';
+import { sendRes, Uploader } from 'utils';
+import { VERSION, STATIC_PATH, BASE_URL } from 'common';
+import { authMiddleware } from 'middleware';
 
 const upload = new Uploader('server/uploads/');
 

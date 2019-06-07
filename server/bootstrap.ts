@@ -2,15 +2,15 @@ import 'reflect-metadata';
 import { InversifyExpressServer } from 'inversify-express-utils';
 import { makeLoggerMiddleware } from 'inversify-logger-middleware';
 import bodyParser from 'body-parser';
-import websocket from './ws';
-import { defaultResMiddleware, errorMiddleware } from './middleware';
-import { container, buildProviderModule, serverStatic } from './ioc/ioc';
+import WsRouter from 'wsRouter';
+import { defaultResMiddleware, errorMiddleware } from 'middleware';
+import { container, buildProviderModule, serverStatic } from 'ioc/ioc';
 import helmet from 'helmet';
-import { resolve } from './utils';
-import { PORT, STATIC_PATH } from './common/global';
+import { resolve } from 'utils';
+import { PORT, STATIC_PATH } from 'common';
 
-import './db';
-import './ioc/loader';
+import 'db';
+import 'ioc/loader';
 
 // Reflects all decorators provided by this package and packages them into
 // a module to be loaded by the container
@@ -31,7 +31,7 @@ server
     app.use(defaultResMiddleware);
     app.use(helmet());
 
-    websocket('/ws/:id', app);
+    WsRouter('/ws/:id', app);
 
     // const wsServer = expressWs(app);
     // app.ws('/ws', authMiddleware, wsMiddleware);
