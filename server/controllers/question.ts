@@ -23,7 +23,7 @@ export default class QuestionController {
   constructor(
     @inject(TYPES.QuestionService) private qstService: QuestionService,
     @inject(TYPES.QstDetailService) private qDetailService: QstDetailService,
-    @inject(TYPES.UserService) private userService: UserService,
+    @inject(TYPES.UserService) private userService: UserService
   ) {}
 
   // 获取被指定的问题
@@ -71,7 +71,7 @@ export default class QuestionController {
     @request() req: any,
     @reqParam('id') id: string, // detailId
     @queryParam('poster') poster: string,
-    @response() res: Response,
+    @response() res: Response
   ) {
     const { id: userId } = req.user;
 
@@ -128,7 +128,7 @@ export default class QuestionController {
     @request() req: any,
     @reqParam('id') detailId: string, // detailId
     @reqBody() body: any[],
-    @response() res: Response,
+    @response() res: Response
   ) {
     const { id: userId } = req.user;
 

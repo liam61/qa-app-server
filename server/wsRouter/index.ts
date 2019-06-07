@@ -86,7 +86,7 @@ class WsRouter {
       // this.clientMap.delete(id);
       console.log(`a client has disconnected, closeCode: ${closeCode}`);
     });
-  };
+  }
 
   initHeartbeat(during: number = 10000) {
     return setInterval(() => {
