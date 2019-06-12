@@ -33,7 +33,7 @@ const fileSchema = new Schema({
 
 const questionSchema = new Schema(
   {
-    user: { type: Types.ObjectId, ref: 'User', required: true }, // 关联
+    user: { type: Types.ObjectId, ref: 'User', required: true },
     title: String,
     content: String,
     files: [fileSchema],

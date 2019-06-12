@@ -40,7 +40,7 @@ export default class MessageController {
   @httpPost('/')
   async deliveryMessage(@reqBody() body: any, @response() res: Response) {
     const { _id } = await this.msgService.save(body);
-    this.friendService.updateById(body.friend, { lastMessage: _id });
+    await this.friendService.updateById(body.friend, { lastMessage: _id });
 
     sendRes(res, 200, 'success', 'submit a message successfully', { _id });
   }

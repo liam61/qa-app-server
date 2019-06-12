@@ -1,7 +1,7 @@
 import { Schema, model, Types } from 'mongoose';
 
 export interface IMessage {
-  _id: string;
+  _id?: string;
   friend: string;
   from?: string;
   to: string;

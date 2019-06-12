@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { sendErr } from 'utils';
+import { sendRes } from 'utils';
 import { Response, NextFunction } from 'ioc/ioc';
 import { JWT_KEY } from 'common';
 
@@ -22,7 +22,7 @@ const checkAuth = (req: any, res: Response, next: NextFunction) => {
 
     next();
   } catch (err) {
-    sendErr(res, 401, `${err.name}: ${err.message}`);
+    sendRes(res, 401, 'fail', `${err.name}: ${err.message}`);
   }
 };
 

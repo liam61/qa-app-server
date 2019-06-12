@@ -10,11 +10,14 @@ export default class FriendService extends BaseService<typeof Friend, IFriend> {
   }
 
   async getFriends(conditions: any, projection: any) {
-    // TODO: 过滤掉 user 密码
-    return await Friend.find(conditions, projection).populate(['user1', 'user2', 'lastMessage']);
+    return await Friend.find(conditions, projection)
+      .populate([{ path: 'user1', select: '-password' }, { path: 'user2', select: '-password' }, 'lastMessage'])
+      .exec();
   }
 
   async getApplies(conditions: any) {
-    return await Friend.find(conditions).populate(['user1', 'user2']);
+    return await Friend.find(conditions)
+      .populate([{ path: 'user1', select: '-password' }, { path: 'user2', select: '-password' }])
+      .exec();
   }
 }

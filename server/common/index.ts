@@ -20,6 +20,8 @@ const QST_STATUS = [
   { key: 'expired', value: '已过期' },
 ];
 
+const ROOT_USER = 'lawler';
+
 export {
   HOST,
   DB_NAME,
@@ -35,4 +37,5 @@ export {
   PHONE_REG,
   PASSWORD_REG,
   QST_STATUS,
+  ROOT_USER,
 };

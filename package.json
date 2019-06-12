@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon",
     "build": "rimraf dist && tsc",
-    "server": "node dist/bootstrap",
+    "server": "node -r ts-node/register -r tsconfig-paths/register dist/bootstrap",
     "lint": "tslint --fix --project ."
   },
   "author": "lawler61",

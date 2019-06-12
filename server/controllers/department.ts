@@ -21,7 +21,7 @@ export default class DepartmentController {
 
   @httpGet('/')
   async getDepts(@response() res: Response) {
-    const data = await this.dptService.findAll();
+    const data = await this.dptService.findAll(null, null, null, { path: 'staff.user', select: '-password' });
 
     sendRes(res, 200, 'success', 'get departments successfully', data);
   }

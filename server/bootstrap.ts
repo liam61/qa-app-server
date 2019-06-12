@@ -7,7 +7,7 @@ import { defaultResMiddleware, errorMiddleware } from 'middleware';
 import { container, buildProviderModule, serverStatic } from 'ioc/ioc';
 import helmet from 'helmet';
 import { resolve } from 'utils';
-import { PORT, STATIC_PATH } from 'common';
+import { PORT, STATIC_PATH, BASE_URL } from 'common';
 
 import 'db';
 import 'ioc/loader';
@@ -38,4 +38,4 @@ server
   })
   .setErrorConfig(app => app.use(errorMiddleware));
 
-server.build().listen(PORT, () => console.log(`your server is running at http://localhost:${PORT} :)`));
+server.build().listen(PORT, () => console.log(`your server is running at ${BASE_URL} :)`));

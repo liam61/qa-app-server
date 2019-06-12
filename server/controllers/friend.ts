@@ -26,9 +26,11 @@ export default class FriendController {
   async getFriends(@request() req: any, @response() res: Response) {
     const { id } = req.user;
 
-    const data: any = await this.friendService.getFriends(
+    const data: any = await this.friendService.findAll(
       { $or: [{ user1: id }, { user2: id }], success: true },
-      '-password'
+      null,
+      null,
+      [{ path: 'user1', select: '-password' }, { path: 'user2', select: '-password' }, 'lastMessage']
     );
 
     sendRes(res, 200, 'success', 'get friends successfully', data);
@@ -41,17 +43,13 @@ export default class FriendController {
 
     // 被请求添加的用户
     const data: any = await this.userService.findOne(
-      {
-        $or: [{ email: account }, { phone: account }, { name: account }],
-      },
+      { $or: [{ email: account }, { phone: account }, { name: account }] },
       '_id'
     );
 
     const { _id: userId } = data;
 
     const friend = await this.friendService.findOne(getSortedIds(id, userId));
-
-    console.log('applyFriend', friend);
 
     if (friend) {
       sendRes(res, 400, 'fail', 'already be friends or send an application');
@@ -69,8 +67,10 @@ export default class FriendController {
   async getApplies(@request() req: any, @response() res: Response) {
     const { id } = req.user;
 
-    // TODO: 同意添加后的数据
-    const data = await this.friendService.getApplies({ receiver: id, success: false });
+    const data = await this.friendService.findAll({ receiver: id, success: false }, null, null, [
+      { path: 'user1', select: '-password' },
+      { path: 'user2', select: '-password' },
+    ]);
 
     sendRes(res, 200, 'success', 'find applies successfully', data);
   }
@@ -85,8 +85,8 @@ export default class FriendController {
   // 可用于拒绝添加
   @httpDelete('/:id')
   async deleteFriend(@reqParam('id') friendId: string, @response() res: Response) {
-    await this.friendService.deleteById(friendId);
+    const data = await this.friendService.deleteById(friendId);
 
-    sendRes(res, 200, 'success', 'delete a friend or application successfully');
+    sendRes(res, 200, 'success', 'delete a friend or application successfully', data);
   }
 }

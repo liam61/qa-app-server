@@ -15,7 +15,7 @@ import {
 // import { IQuestion } from 'models/question';
 // import { sendRes } from 'utils';
 import { VERSION } from 'common';
-// import { authMiddleware } from 'middleware';
+import { authMiddleware } from 'middleware';
 
-@controller(`/${VERSION}/qstDetails`)
+@controller(`/${VERSION}/qstDetails`, authMiddleware)
 export default class QstDetailController {}

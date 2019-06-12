@@ -23,7 +23,7 @@ export type qstStatusType = 'unread' | 'unfilled' | 'completed' | 'expired';
 
 export interface ITodo {
   _id: string;
-  questionId: string;
+  question: string;
   status: qstStatusType;
   score: number;
 }
@@ -31,19 +31,19 @@ export interface ITodo {
 // TODO: 完善 result
 export interface IPost {
   _id: string;
-  questionId: string;
+  question: string;
   status: qstStatusType;
   result: any;
 }
 
 const todoSchema = new Schema({
-  questionId: String,
+  question: { type: Types.ObjectId, ref: 'Question' },
   status: String,
   score: Number,
 });
 
 const postSchema = new Schema({
-  questionId: String,
+  question: { type: Types.ObjectId, ref: 'Question' },
   status: String,
   result: String,
 });

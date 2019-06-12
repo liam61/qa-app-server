@@ -28,24 +28,25 @@ export default class QuestionController {
 
   // 获取被指定的问题
   @httpGet('/')
-  async getQuestions(@request() req: any, @response() res: Response) {
+  async getTodos(@request() req: any, @response() res: Response) {
     const { id } = req.user;
 
-    const { todos }: any = await this.userService.findById(id, 'todos'); // 获取该用户被指定的问题
-    const data = await this.qstService.getQuestions(todos, false);
+    // 获取该用户被指定的问题
+    const { todos }: any = await this.userService.findById(id, 'todos', null, {
+      path: 'todos.question',
+      populate: { path: 'user', select: 'name avatar' },
+    });
+
+    const data = this.qstService.genListsWithSection(todos, false);
 
     data.total
       ? sendRes(res, 200, 'success', 'get todos successfully', data)
-      : sendRes(res, 404, 'fail', 'no todo exists', {
-          lists: [],
-          total: 0,
-          newer: 0,
-        });
+      : sendRes(res, 404, 'fail', 'no todo exists', { lists: [], total: 0, newer: 0 });
   }
 
   // 获取自己创建的问题
   @httpGet('/:id')
-  async getQuestionOfSelf(@request() req: any, @reqParam('id') userId: string, @response() res: Response) {
+  async getPosts(@request() req: any, @reqParam('id') userId: string, @response() res: Response) {
     const { id } = req.user;
 
     if (id !== userId) {
@@ -54,36 +55,42 @@ export default class QuestionController {
       return;
     }
 
-    const { posts }: any = await this.userService.findById(id, 'posts'); // 获取该用户创建的问题
-    const data = await this.qstService.getQuestions(posts, true);
+    // 获取该用户创建的问题
+    const { posts }: any = await this.userService.findById(id, 'posts', null, {
+      path: 'posts.question',
+      populate: { path: 'user', select: 'name avatar' },
+    });
+
+    const data = this.qstService.genListsWithSection(posts, true);
 
     data.total
       ? sendRes(res, 200, 'success', 'get posts successfully', data)
-      : sendRes(res, 400, 'fail', 'no post exists', {
-          lists: [],
-          total: 0,
-          newer: 0,
-        });
+      : sendRes(res, 400, 'fail', 'no post exists', { lists: [], total: 0, newer: 0 });
   }
 
   @httpGet('/:id/details')
   async getQstDetailById(
-    @request() req: any,
-    @reqParam('id') id: string, // detailId
-    @queryParam('poster') poster: string,
+    @request() _req: any,
+    @reqParam('id') id: string, // questionId
+    @queryParam('poster') _poster: string,
     @response() res: Response
   ) {
-    const { id: userId } = req.user;
+    // const { id: userId } = req.user;
+    // console.log('getQstDetailById');
 
+    console.log(id);
     const data = await this.qDetailService.findOne({ question: id });
 
-    if (JSON.parse(poster)) {
-      // 更新 poster 的 post 状态
-      await this.userService.updatePostStatus(userId, id, 'unread', 'unfilled');
-    } else {
-      // 更新 receiver 的 todo 状态
-      await this.userService.updateTodoStatus(userId, id, 'unread', 'unfilled');
-    }
+    console.log(data);
+
+    // if (JSON.parse(poster)) { // 转换为 boolean
+    //   // 更新 poster 的 post 状态
+    //   await this.userService.updatePostStatus(userId, id, 'unread', 'unfilled');
+    // } else {
+    //   // 更新 receiver 的 todo 状态
+    //   console.log('updateTodoStatus0');
+    //   await this.userService.updateTodoStatus(userId, id, 'unread', 'unfilled');
+    // }
 
     data
       ? sendRes(res, 200, 'success', 'get a question detail successfully', data.toObject())
@@ -99,16 +106,16 @@ export default class QuestionController {
 
     // 更新 poster 的 posts
     const { posts }: any = await this.userService.findById(id, 'posts');
-    posts.push({ questionId: _id, status: 'unread', score: 0 });
+    posts.push({ question: _id, status: 'unread', score: 0 });
 
     await this.userService.updateById(id, { posts });
 
     // 更新 receivers 的 todos
     const { receivers } = body;
 
-    receivers.account.forEach(async (userId: string) => {
+    receivers.forEach(async (userId: string) => {
       const { todos }: any = await this.userService.findById(userId, 'todos');
-      todos.push({ questionId: _id, status: 'unread', score: 0 });
+      todos.push({ question: _id, status: 'unread', score: 0 });
 
       await this.userService.updateById(userId, { todos });
     });
