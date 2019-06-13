@@ -31,6 +31,8 @@ export default class QuestionController {
   async getTodos(@request() req: any, @response() res: Response) {
     const { id } = req.user;
 
+    console.log(id);
+
     // 获取该用户被指定的问题
     const { todos }: any = await this.userService.findById(id, 'todos', null, {
       path: 'todos.question',

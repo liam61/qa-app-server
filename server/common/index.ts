@@ -1,8 +1,10 @@
-const HOST = 'localhost';
-const PORT = 4000;
+const HOST = process.env.NODE_ENV === 'development' ? 'localhost' : 'omyleon.com';
+const PORT = 6260;
+const SERVER_PORT = 8080;
 const VERSION = 'v1';
 const PREFIX = 'qa';
-const DB_NAME = 'qa-app';
+// const DB_NAME = 'qa-app';
+const DB_NAME = 'qa-app-server';
 const CONN_STR = `mongodb://${HOST}:27017/${DB_NAME}`;
 // const CONN_STR = `mongodb://user:pass@${HOST}:27017/${DB_NAME}`;
 const STATIC_PATH = `${VERSION}/uploads`;
@@ -38,4 +40,5 @@ export {
   PASSWORD_REG,
   QST_STATUS,
   ROOT_USER,
+  SERVER_PORT,
 };

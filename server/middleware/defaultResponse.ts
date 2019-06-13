@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from 'ioc/ioc';
+import { HOST, SERVER_PORT } from 'common';
 
 const defaultResponse = (req: Request, res: Response, next: NextFunction) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Origin', `http://${HOST}:${SERVER_PORT}`);
   res.header('Access-Control-Allow-Credentials', 'true');
   // res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
