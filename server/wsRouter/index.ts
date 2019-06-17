@@ -61,7 +61,6 @@ class WsRouter {
 
   wsMiddleWare = (wServer: any, req: any) => {
     const { id } = req.params;
-    console.log('wsMiddleWare', id);
 
     wServer.id = id;
     wServer.isAlive = true;

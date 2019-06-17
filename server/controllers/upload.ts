@@ -23,7 +23,6 @@ const upload = new Uploader('server/uploads/');
 
 @controller(`/${VERSION}`) // 根路由
 export default class UploadController {
-  // @httpPut('/upload', upload.multer.single('file'))
   @httpPut('/upload', authMiddleware, upload.multer.single('file'))
   async uploadPut(@request() _req: any, @response() res: Response) {
     const url = `${BASE_URL}/${STATIC_PATH}/${upload.fileName}`;

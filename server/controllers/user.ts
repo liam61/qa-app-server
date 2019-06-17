@@ -60,6 +60,8 @@ export default class UserController {
       password,
       department: dptId,
       avatar: `${BASE_URL}/${STATIC_PATH}/default-avatar.jpg`,
+      gender: 'male',
+      profile: 'edit profile',
     });
 
     // link department

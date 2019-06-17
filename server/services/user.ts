@@ -44,7 +44,6 @@ export default class UserService extends BaseService<typeof User, IUser> {
   }
 
   async updateTodoStatus(id: string, questionId: string, from: qstStatusType, to: qstStatusType) {
-    console.log('updateTodoStatus');
     const { todos }: any = await this.findById(id, 'todos');
 
     todos.forEach((todo: ITodo) => {
