@@ -69,21 +69,23 @@ export default class UserController {
     staff.push({ user: userId });
     await this.dptService.updateById(dptId, { staff });
 
-    // link friend to root user
-    const { _id: rootId }: any = await this.userService.findOne({ name: ROOT_USER }, '_id');
-    const { _id: friend } = await this.friendService.save(
-      Object.assign(getSortedIds(rootId, userId), { applicant: userId, receiver: rootId, success: true })
-    );
+    if (name !== ROOT_USER) {
+      // link friend to root user
+      const { _id: rootId }: any = await this.userService.findOne({ name: ROOT_USER }, '_id');
+      const { _id: friend } = await this.friendService.save(
+        Object.assign(getSortedIds(rootId, userId), { applicant: userId, receiver: rootId, success: true })
+      );
 
-    // link first message
-    const { _id } = await this.msgService.save({
-      friend,
-      from: rootId,
-      to: userId,
-      content: '我们已经是好友了，开始聊天吧！',
-      type: 'text',
-    });
-    await this.friendService.updateById(friend, { lastMessage: _id });
+      // link first message
+      const { _id } = await this.msgService.save({
+        friend,
+        from: rootId,
+        to: userId,
+        content: '我们已经是好友了，开始聊天吧！',
+        type: 'text',
+      });
+      await this.friendService.updateById(friend, { lastMessage: _id });
+    }
 
     sendRes(res, 201, 'success', 'create a user successfully');
   }

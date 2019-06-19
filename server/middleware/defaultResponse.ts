@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'ioc/ioc';
 import { CLIENT_URL } from 'common';
 
 const defaultResponse = (req: Request, res: Response, next: NextFunction) => {
-  res.header('Access-Control-Allow-Origin', `http://${CLIENT_URL}`);
+  res.header('Access-Control-Allow-Origin', CLIENT_URL);
   res.header('Access-Control-Allow-Credentials', 'true');
   // res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
