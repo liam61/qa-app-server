@@ -12,29 +12,7 @@
 
 2. [问答系统 前端 -> https://github.com/lawler61/qa-app](https://github.com/lawler61/qa-app)
 
-3. [前端脚手架地址 -> https://github.com/lawler61/react-lighter](https://github.com/lawler61/react-lighter)
-
-## 功能
-
-1. 用户：登录、注册、修改基本信息、修改密码、上传头像
-
-2. 创建问题：包括问题基本信息、具体问题、指定人员
-
-3. 完成问题：被指定用户在规定时间内完成问题，并提交
-
-4. 收集问题：被指定用户都作答完成后，问题作者可对问题进行收集和分析
-
-5. 聊天：用户之间添加好友，进行简单聊天
-
-## 运行
-
-```bash
-yarn or npm i
-
-yarn start // for dev
-
-yarn build && yarn server // for prod
-```
+3. [react 脚手架地址 -> https://github.com/lawler61/react-lighter](https://github.com/lawler61/react-lighter)
 
 ## 目录结构
 
@@ -74,4 +52,26 @@ yarn build && yarn server // for prod
     ├── uploads // 静态文件
     ├── utils
     └── wsRouter
+```
+
+## 功能
+
+1. 用户：登录、注册、修改基本信息、修改密码、上传头像
+
+2. 创建问题：包括问题基本信息、具体问题、指定人员
+
+3. 完成问题：被指定用户在规定时间内完成问题，并提交
+
+4. 收集问题：被指定用户都作答完成后，问题作者可对问题进行收集和分析
+
+5. 聊天：用户之间添加好友，进行简单聊天
+
+## 运行
+
+```bash
+yarn or npm i
+
+yarn start // for dev
+
+yarn build && yarn server // for prod
 ```

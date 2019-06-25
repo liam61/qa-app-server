@@ -10,7 +10,7 @@
     "lint": "tslint --fix --project ."
   },
   "author": "lawler61",
-  "license": "ISC",
+  "license": "MIT",
   "pre-commit": [
     "lint"
   ],
