@@ -22,8 +22,6 @@ interface IFile {
   cover?: boolean;
 }
 
-// type receiversType = { [key in 'department' | 'account']?: string[] };
-
 const fileSchema = new Schema({
   url: String,
   name: String,

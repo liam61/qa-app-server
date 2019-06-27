@@ -13,8 +13,7 @@ export default class QuestionService extends BaseService<typeof Question, IQuest
     super(Question);
   }
 
-  // async getQuestions<I extends IPost | ITodo>(qstIds){}
-  genListsWithSection(todosOrPosts: any[], fromSelf: boolean) {
+  genListsWithSection(todosOrPosts: any[], _fromSelf: boolean) {
     let section = '';
     let index = 0;
     let newer = 0;
@@ -23,7 +22,8 @@ export default class QuestionService extends BaseService<typeof Question, IQuest
       // qst.status = todos[i].status; // 不能赋值上去
       const { question, status } = todoOrPost;
 
-      if ((status === 'unfilled' && !fromSelf) || (status === 'completed' && fromSelf)) {
+      // if ((status === 'unfilled' && !fromSelf) || (status === 'completed' && fromSelf)) {
+      if (status === 'unread') {
         newer += 1;
       }
 

@@ -18,11 +18,14 @@ const PHONE_REG = /^(?:\+?86)?1(?:3\d{3}|5[^4\D]\d{2}|8\d{3}|7(?:[35678]\d{2}|4(
 const PASSWORD_REG = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
 
 const QST_STATUS = [
+  { key: 'post', value: '刚发布' },
   { key: 'unread', value: '未读' }, // 不是所有人都阅读过
   { key: 'unfilled', value: '未填写' }, // 不是所有人有填写了
   { key: 'completed', value: '已完成' }, // 所有人都填写了，已出报告
   { key: 'expired', value: '已过期' },
 ];
+// 被指定者问题状态：unread -> unfilled -> completed | expired
+// 作者问题状态：post -> unfilled -> unread -> completed
 
 const ROOT_USER = 'lawler';
 

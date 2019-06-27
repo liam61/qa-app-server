@@ -23,7 +23,7 @@ export default class QstDetailService extends BaseService<typeof QstDetail, IQst
 
         if (qstItem._id.toString() === itemId) {
           // qstItem.replies.set(userId, r);
-          qstItem.replies.push({ userId, value: r });
+          qstItem.replies.push({ user: userId, value: r });
 
           reply.pushed = true;
         }

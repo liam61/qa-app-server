@@ -17,6 +17,8 @@ import { IQuestion } from 'models/question';
 import { sendRes } from 'utils';
 import { VERSION } from 'common';
 import { authMiddleware } from 'middleware';
+import { ITodo } from 'models/user';
+import { Types } from 'mongoose';
 
 @controller(`/${VERSION}/questions`, authMiddleware)
 export default class QuestionController {
@@ -31,7 +33,6 @@ export default class QuestionController {
   async getTodos(@request() req: any, @response() res: Response) {
     const { id } = req.user;
 
-    // 获取该用户被指定的问题
     const { todos }: any = await this.userService.findById(id, 'todos', null, {
       path: 'todos.question',
       populate: { path: 'user', select: 'name avatar' },
@@ -70,38 +71,62 @@ export default class QuestionController {
 
   @httpGet('/:id/details')
   async getQstDetailById(
-    @request() _req: any,
-    @reqParam('id') id: string, // questionId
-    @queryParam('poster') _poster: string,
+    @request() req: any,
+    @reqParam('id') qstId: string,
+    @queryParam('poster') poster: string,
     @response() res: Response
   ) {
-    // const { id: userId } = req.user;
-    const data = await this.qDetailService.findOne({ question: id });
+    const { id: userId } = req.user;
+    const data: any = await this.qDetailService.findOne({ question: qstId }, null, null, {
+      path: 'qstItems.replies.user',
+      select: 'name avatar',
+    });
 
-    // if (JSON.parse(poster)) { // 转换为 boolean
-    //   // 更新 poster 的 post 状态
-    //   await this.userService.updatePostStatus(userId, id, 'unread', 'unfilled');
-    // } else {
-    //   // 更新 receiver 的 todo 状态
-    //   console.log('updateTodoStatus0');
-    //   await this.userService.updateTodoStatus(userId, id, 'unread', 'unfilled');
-    // }
+    const qstItems = data.qstItems.toObject();
+
+    // 转换为 boolean，更新 poster 的 post 状态
+    if (JSON.parse(poster)) {
+      // 所有人填写完，作者还未查看结果
+      await this.userService.updatePostStatus(userId, qstId, 'unread', 'completed');
+    } else {
+      // 更新 receiver 的 todo 状态
+      await this.userService.updateTodoStatus(userId, qstId, 'unread', 'unfilled');
+
+      // 更新 poster 的状态
+      const statusArr = await this.getStatusByQstId(qstId);
+      // 都阅读完
+      if (!statusArr.some(s => s === 'unread')) {
+        const { user: posterId }: any = await this.qstService.findById(qstId, 'user');
+
+        await this.userService.updatePostStatus(posterId, qstId, 'post', 'unfilled');
+      }
+
+      // 过滤别人的回答
+      qstItems.forEach(
+        (qstItem: any) => (qstItem.replies = qstItem.replies.filter((r: any) => r.user._id.toString() === userId))
+      );
+    }
 
     data
-      ? sendRes(res, 200, 'success', 'get a question detail successfully', data.toObject())
+      ? sendRes(res, 200, 'success', 'get a question detail successfully', Object.assign(data.toObject(), { qstItems }))
       : sendRes(res, 400, 'fail', 'question do not exist');
   }
 
   @httpPost('/')
   async createQuestion(@request() req: any, @reqBody() body: any, @response() res: Response) {
     const { id } = req.user; // poster id
-    const { _id } = await this.qstService.save({ user: id, ...body });
+    const { qstItems, receivers: rsToSave, ...restBody } = body;
 
-    await this.qDetailService.save({ question: _id, ...body });
+    const { _id } = await this.qstService.save({ user: id, ...restBody });
+    await this.qDetailService.save({
+      question: _id,
+      qstItems,
+      receivers: rsToSave.map((r: string) => ({ user: Types.ObjectId(r) })),
+    });
 
     // 更新 poster 的 posts
     const { posts }: any = await this.userService.findById(id, 'posts');
-    posts.push({ question: _id, status: 'unread', score: 0 });
+    posts.push({ question: _id, status: 'post' });
 
     await this.userService.updateById(id, { posts });
 
@@ -142,13 +167,12 @@ export default class QuestionController {
     await this.userService.updateTodoStatus(userId, qstId, 'unfilled', 'completed');
 
     // 更新 poster 的 post 状态
-    const { receivers }: any = await this.qDetailService.findOne({ question: qstId }, 'receivers');
-    const completed = await this.userService.isCompletePost(receivers, qstId);
-
-    if (completed) {
+    const statusArr = await this.getStatusByQstId(qstId);
+    // 都完成了
+    if (statusArr.every(s => s === 'completed')) {
       const { user: posterId }: any = await this.qstService.findById(qstId, 'user');
 
-      await this.userService.updatePostStatus(posterId, qstId, 'unfilled', 'completed');
+      await this.userService.updatePostStatus(posterId, qstId, 'unfilled', 'unread');
     }
 
     sendRes(res, 200, 'success', 'submit question successfully');
@@ -159,5 +183,16 @@ export default class QuestionController {
     await this.qstService.deleteById(id);
 
     sendRes(res, 200, 'success', 'delete a question successfully');
+  }
+
+  async getStatusByQstId(qstId: string): Promise<string[]> {
+    const { receivers }: any = await this.qDetailService.findOne({ question: qstId }, 'receivers', null, {
+      path: 'receivers.user',
+      select: 'todos',
+    });
+
+    return receivers.map(
+      ({ user }: any) => user.todos.find((t: ITodo) => t.question.toString() === qstId.toString()).status
+    );
   }
 }

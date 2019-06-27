@@ -12,7 +12,7 @@ import {
 } from 'inversify-express-utils';
 import jwt from 'jsonwebtoken';
 import { inject, TYPES, Response } from 'ioc/ioc';
-import { UserService, DepartmentService, FriendService, MessageService } from 'services';
+import { UserService, DepartmentService, FriendService, MessageService, QstDetailService } from 'services';
 import { IUser } from 'models/user';
 import { sendRes, getUid, getSortedIds } from 'utils';
 import { VERSION, JWT_KEY, ROOT_USER, BASE_URL, STATIC_PATH } from 'common';
@@ -26,7 +26,8 @@ export default class UserController {
     @inject(TYPES.UserService) private userService: UserService,
     @inject(TYPES.DepartmentService) private dptService: DepartmentService,
     @inject(TYPES.FriendService) private friendService: FriendService,
-    @inject(TYPES.MessageService) private msgService: MessageService
+    @inject(TYPES.MessageService) private msgService: MessageService,
+    @inject(TYPES.QstDetailService) private qstDetailService: QstDetailService
   ) {}
 
   @httpGet('/', authMiddleware)
@@ -55,7 +56,7 @@ export default class UserController {
       throw validateError;
     }
 
-    const { _id: userId }: any = await this.userService.createUser({
+    const { _id: userId, todos }: any = await this.userService.createUser({
       name,
       password,
       department: dptId,
@@ -70,8 +71,23 @@ export default class UserController {
     await this.dptService.updateById(dptId, { staff });
 
     if (name !== ROOT_USER) {
+      const { _id: rootId, posts }: any = await this.userService.findOne({ name: ROOT_USER }, '_id posts', null, {
+        path: 'posts.question',
+        select: '_id',
+      });
+
+      const { _id: qstId } = posts[0].question._id;
+
+      // link first todo
+      todos.push({ question: qstId, status: 'unread', score: 0 });
+      await this.userService.updateById(userId, { todos });
+
+      // link todo's receivers
+      const { receivers }: any = await this.qstDetailService.findOne({ question: qstId }, 'receivers');
+      receivers.push({ user: userId });
+      await this.qstDetailService.updateOne({ question: qstId }, { receivers });
+
       // link friend to root user
-      const { _id: rootId }: any = await this.userService.findOne({ name: ROOT_USER }, '_id');
       const { _id: friend } = await this.friendService.save(
         Object.assign(getSortedIds(rootId, userId), { applicant: userId, receiver: rootId, success: true })
       );

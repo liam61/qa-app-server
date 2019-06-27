@@ -6,17 +6,18 @@ export interface IQstItem {
   title: string;
   options?: IOption[];
   required: boolean;
-  replies?: Array<{ id: string; value: string[] }>;
+  replies: Array<{ user: string; value: string[] }>;
 }
 
 export interface IOption {
-  // id: string;
+  _id: string;
   value: string;
 }
 
 export interface IQstDetail {
+  question: string;
   qstItems: IQstItem[];
-  receivers: { [key in 'department' | 'account']?: string[] };
+  receivers: Array<{ user: string }>;
 }
 
 const QstItem = new Schema({
@@ -26,22 +27,14 @@ const QstItem = new Schema({
   options: [{ value: String }],
   required: Boolean,
   // replies: { type: Map, of: [String], default: {} },
-  replies: [{ userId: String, value: [String] }],
+  replies: [{ user: { type: Types.ObjectId, ref: 'User', required: true }, value: [String] }],
 });
-
-// const Receivers = new Schema({
-//   department: [String],
-//   account: [String],
-// });
 
 const QstDetailSchema = new Schema(
   {
     question: { type: Types.ObjectId, ref: 'Question', required: true },
     qstItems: [QstItem],
-    receivers: {
-      department: [String],
-      account: [String],
-    },
+    receivers: [{ user: { type: Types.ObjectId, ref: 'User' } }],
   },
   { timestamps: true }
 );

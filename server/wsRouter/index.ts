@@ -12,7 +12,6 @@ const defaultOpts: Options = {
     verifyClient: (info: any) => {
       const { url } = info.req;
       // TODO: ??
-      // console.log('verifyClient', url);
       // const { authorization } = req.headers;
 
       if (!url) {

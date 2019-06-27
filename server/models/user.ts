@@ -19,7 +19,7 @@ export interface IUser {
   posts?: IPost[];
 }
 
-export type qstStatusType = 'unread' | 'unfilled' | 'completed' | 'expired';
+export type qstStatusType = 'post' | 'unread' | 'unfilled' | 'completed' | 'expired';
 
 export interface ITodo {
   _id: string;
@@ -33,7 +33,7 @@ export interface IPost {
   _id: string;
   question: string;
   status: qstStatusType;
-  result: any;
+  result: Array<{ user: string }>;
 }
 
 const todoSchema = new Schema({
@@ -45,7 +45,7 @@ const todoSchema = new Schema({
 const postSchema = new Schema({
   question: { type: Types.ObjectId, ref: 'Question' },
   status: String,
-  result: String,
+  result: [{ user: { type: Types.ObjectId, ref: 'User' } }],
 });
 
 const userSchema = new Schema(
