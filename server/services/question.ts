@@ -3,7 +3,6 @@ import Question, { IQuestion } from 'models/question';
 // import { ITodo, IPost } from 'models/user';
 import TYPES from 'constant/types';
 import BaseService from './base';
-import { getLocalDate } from 'utils';
 
 const getSection = (date: Date) => date.toLocaleString('zh', { year: 'numeric', month: '2-digit' });
 
@@ -27,7 +26,7 @@ export default class QuestionService extends BaseService<typeof Question, IQuest
         newer += 1;
       }
 
-      const qst = Object.assign(question.toObject(), { status, date: getLocalDate(question.createdAt).slice(5, 12) });
+      const qst = Object.assign(question.toObject(), { status, date: question.createdAt.toString() });
 
       if (i === 0) {
         section = getSection(qst.createdAt);

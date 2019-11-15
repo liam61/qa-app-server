@@ -22,11 +22,6 @@ function getObjectId() {
   return Types.ObjectId();
 }
 
-function getLocalDate(date: Date) {
-  // return date.toLocaleString('zh', { hour12: false }).replace(/\//g, '-');
-  return date.toLocaleString().replace(/\//g, '-');
-}
-
 function getSortedIds(user1: string, user2: string) {
   if (user1 < user2) {
     const temp = user1;
@@ -38,4 +33,4 @@ function getSortedIds(user1: string, user2: string) {
   // return user1 < user2 ? { user1: user2 } : { user1: user2, user2: user1 };
 }
 
-export { resolve, emptyFn, getUid, getObjectId, getLocalDate, sendRes, sendErr, Uploader, getSortedIds };
+export { resolve, emptyFn, getUid, getObjectId, sendRes, sendErr, Uploader, getSortedIds };

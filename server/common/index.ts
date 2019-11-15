@@ -6,10 +6,9 @@ const PORT = 6260;
 const CLIENT_URL = isDev ? `http://${HOST}:3000` : `https://${PREFIX}.${HOST}`;
 const VERSION = 'v1';
 const DB_NAME = `${PREFIX}-app`;
-const CONN_STR = `mongodb://${HOST}:27017/${DB_NAME}`;
-// const CONN_STR = `mongodb://user:pass@${HOST}:27017/${DB_NAME}`;
+const CONN_STR = `mongodb://${HOST}:27017/${DB_NAME}`; // 需要用户认证在 db/index.ts 中设置
 const STATIC_PATH = `${VERSION}/uploads`;
-const BASE_URL = isDev ? `http://${HOST}:${PORT}` : `https://qaapi.omyleon.com`; // nginx
+const BASE_URL = isDev ? `http://${HOST}:${PORT}` : `https://qa-api.omyleon.com`; // nginx
 const JWT_KEY = '9AjeX6xQ46Hn';
 
 const USER_REG = /^(?=.{6,12}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/;

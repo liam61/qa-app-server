@@ -192,7 +192,10 @@ export default class QuestionController {
     });
 
     return receivers.map(
-      ({ user }: any) => user.todos.find((t: ITodo) => t.question.toString() === qstId.toString()).status
+      ({ user }: any) => {
+        const todo = user.todos.find((t: ITodo) => t.question.toString() === qstId.toString()) || {};
+        return todo.status;
+      }
     );
   }
 }

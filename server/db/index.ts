@@ -5,6 +5,9 @@ const defaultOpts: ConnectionOptions = {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
+  useUnifiedTopology: true,
+  // user: 'username',
+  // pass: 'password',
 };
 
 class MongoDBClient {
